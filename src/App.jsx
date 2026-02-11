@@ -1,7 +1,7 @@
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Dashboard from './pages/admin/dashboard/Dashboard'
-import Home from './pages/Home'
+import Home from './pages/HomeDefault'
 
 // User imports
 import UserList from './pages/admin/users/UserList'
