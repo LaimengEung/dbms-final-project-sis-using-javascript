@@ -1,16 +1,20 @@
-import React from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import Dashboard from './pages/admin/dashboard/Dashboard'
-import Home from './pages/HomeDefault'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import './App.css';
 
-// Home / entry
 import HomeDefault from './pages/HomeDefault';
-
-// Admin dashboard
 import Dashboard from './pages/admin/dashboard/Dashboard';
-
-import './App.css'
-import DashboardFaculty from './pages/faculty/dashboard/DashboardFaculty'
+import UserCreate from './pages/admin/users/UserCreate';
+import UserEdit from './pages/admin/users/UserEdit';
+import StudentList from './pages/admin/students/StudentList';
+import StudentCreate from './pages/admin/students/StudentCreate';
+import StudentEdit from './pages/admin/students/StudentEdit';
+import StudentView from './pages/admin/students/StudentView';
+import EnrollmentList from './pages/admin/enrollments/EnrollmentList';
+import EnrollmentCreate from './pages/admin/enrollments/EnrollmentCreate';
+import EnrollmentEdit from './pages/admin/enrollments/EnrollmentEdit';
+import EnrollmentView from './pages/admin/enrollments/EnrollmentView';
+import FacultyLayout from './components/layout/FacultyLayout';
 
 function App() {
   return (
@@ -23,7 +27,7 @@ function App() {
         <Route path="/admin" element={<Dashboard />} />
 
         {/* Admin Dashboard */}
-        <Route path="/faculty" element={<DashboardFaculty />} />
+        <Route path="/faculty" element={<FacultyLayout />} />
         
         {/* User routes */}
         <Route path="/admin/users/create" element={<UserCreate />} />
