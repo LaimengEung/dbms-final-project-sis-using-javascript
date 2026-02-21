@@ -16,6 +16,7 @@ import EnrollmentCreate from './pages/admin/enrollments/EnrollmentCreate';
 import EnrollmentEdit from './pages/admin/enrollments/EnrollmentEdit';
 import EnrollmentView from './pages/admin/enrollments/EnrollmentView';
 import FacultyLayout from './components/layout/FacultyLayout';
+import DashboardFaculty from './pages/faculty/dashboard/DashboardFaculty';
 
 function App() {
   return (
@@ -28,7 +29,7 @@ function App() {
         <Route path="/admin" element={<Dashboard />} />
 
         {/* Faculty */}
-        <Route path="/faculty" element={<FacultyLayout />} />
+        <Route path="/faculty" element={<DashboardFaculty />} />
 
         {/* User routes */}
         <Route path="/admin/users" element={<UserList />} />
