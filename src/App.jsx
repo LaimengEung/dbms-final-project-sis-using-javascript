@@ -4,6 +4,7 @@ import './App.css';
 
 import HomeDefault from './pages/HomeDefault';
 import Dashboard from './pages/admin/dashboard/Dashboard';
+import UserList from './pages/admin/users/UserList';
 import UserCreate from './pages/admin/users/UserCreate';
 import UserEdit from './pages/admin/users/UserEdit';
 import StudentList from './pages/admin/students/StudentList';
@@ -26,10 +27,11 @@ function App() {
         {/* Admin Dashboard */}
         <Route path="/admin" element={<Dashboard />} />
 
-        {/* Admin Dashboard */}
+        {/* Faculty */}
         <Route path="/faculty" element={<FacultyLayout />} />
-        
+
         {/* User routes */}
+        <Route path="/admin/users" element={<UserList />} />
         <Route path="/admin/users/create" element={<UserCreate />} />
         <Route path="/admin/users/edit/:id" element={<UserEdit />} />
 
