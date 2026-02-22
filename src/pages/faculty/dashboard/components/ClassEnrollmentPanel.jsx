@@ -56,7 +56,7 @@ const ClassEnrollmentPanel = ({ courses = defaultCourses }) => {
             marginBottom: "24px" 
           }}
         >
-          <h2 style={{ margin: 0, fontSize: "20px", fontWeight: 700, color: "#111827" }}>
+          <h2 style={{ margin: 0, fontSize: "20px", fontWeight: 500, color: "#111827" }}>
             My Courses This Semester
           </h2>
           <a
