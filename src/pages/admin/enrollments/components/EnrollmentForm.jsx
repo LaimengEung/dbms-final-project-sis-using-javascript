@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Input, Select, Card } from '../../../../components/ui';
 import enrollmentService from '../../../../services/enrollmentService';
 
-const EnrollmentForm = ({ initialData = {}, onSubmit, isLoading, semesters = [], isEdit = false }) => {
+const EnrollmentForm = ({ initialData = {}, onSubmit, isLoading, semesters = [], isEdit = false, disableSubmit = false }) => {
   const [formData, setFormData] = useState({
     student_id: initialData.student_id || '',
     section_id: initialData.section_id || '',
@@ -14,6 +14,20 @@ const EnrollmentForm = ({ initialData = {}, onSubmit, isLoading, semesters = [],
   const [students, setStudents] = useState([]);
   const [sections, setSections] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const semesterOptions = semesters.map((s) => ({
+    value: String(s.semester_id),
+    label: `${s.semester_name} ${s.semester_year}`,
+  }));
+  const sectionOptions = sections.map((s) => ({
+    value: String(s.section_id),
+    label: `${s.course?.course_code} - Sec ${s.section_number} (${s.enrolled_count}/${s.max_capacity})`,
+  }));
+  const statusOptions = [
+    { value: 'enrolled', label: 'Enrolled' },
+    { value: 'dropped', label: 'Dropped' },
+    { value: 'withdrawn', label: 'Withdrawn' },
+    { value: 'completed', label: 'Completed' },
+  ];
 
   // Search students
   useEffect(() => {
@@ -58,14 +72,9 @@ const EnrollmentForm = ({ initialData = {}, onSubmit, isLoading, semesters = [],
           onChange={(e) => setFormData({ ...formData, semester_id: e.target.value, section_id: '' })}
           error={errors.semester_id}
           disabled={isEdit}
-        >
-          <option value="">Select semester</option>
-          {semesters.map(s => (
-            <option key={s.semester_id} value={s.semester_id}>
-              {s.semester_name} {s.semester_year}
-            </option>
-          ))}
-        </Select>
+          placeholder="Select semester"
+          options={semesterOptions}
+        />
       </div>
 
       {/* Student */}
@@ -108,14 +117,9 @@ const EnrollmentForm = ({ initialData = {}, onSubmit, isLoading, semesters = [],
           onChange={(e) => setFormData({ ...formData, section_id: e.target.value })}
           error={errors.section_id}
           disabled={!formData.semester_id}
-        >
-          <option value="">Select section</option>
-          {sections.map(s => (
-            <option key={s.section_id} value={s.section_id}>
-              {s.course?.course_code} - Sec {s.section_number} ({s.enrolled_count}/{s.max_capacity})
-            </option>
-          ))}
-        </Select>
+          placeholder="Select section"
+          options={sectionOptions}
+        />
       </div>
 
       {/* Status */}
@@ -124,12 +128,8 @@ const EnrollmentForm = ({ initialData = {}, onSubmit, isLoading, semesters = [],
         <Select
           value={formData.status}
           onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-        >
-          <option value="enrolled">Enrolled</option>
-          <option value="dropped">Dropped</option>
-          <option value="withdrawn">Withdrawn</option>
-          <option value="completed">Completed</option>
-        </Select>
+          options={statusOptions}
+        />
       </div>
 
       {/* Buttons */}
@@ -137,7 +137,7 @@ const EnrollmentForm = ({ initialData = {}, onSubmit, isLoading, semesters = [],
         <Button type="button" variant="outline" onClick={() => window.history.back()}>
           Cancel
         </Button>
-        <Button type="submit" isLoading={isLoading}>
+        <Button type="submit" isLoading={isLoading} disabled={disableSubmit}>
           {isEdit ? 'Update' : 'Create'} Enrollment
         </Button>
       </div>

@@ -20,6 +20,7 @@ import FacultyList from './pages/admin/faculty/FacultyList';
 import FacultyCreate from './pages/admin/faculty/FacultyCreate';
 import FacultyEdit from './pages/admin/faculty/FacultyEdit';
 import FacultyView from './pages/admin/faculty/FacultyView';
+import SemesterList from './pages/admin/semesters/SemesterList';
 import DashboardFaculty from './pages/faculty/dashboard/DashboardFaculty';
 
 function App() {
@@ -59,8 +60,12 @@ function App() {
           <Route path="/admin/faculty/edit/:id" element={<FacultyEdit />} />
           <Route path="/admin/faculty/:id" element={<FacultyView />} />
 
+          {/* Admin Semesters */}
+          <Route path="/admin/semesters" element={<SemesterList />} />
+
           {/* Optional legacy support */}
           <Route path="/enrollments" element={<Navigate to="/admin/enrollments" replace />} />
+          <Route path="/admin/academics" element={<Navigate to="/admin/semesters" replace />} />
         </Routes>
       </Router>
     </ThemeProvider>
