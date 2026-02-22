@@ -64,11 +64,7 @@ const enrollmentService = {
     }
   },
 
-<<<<<<< HEAD
-  getAvailableSections: async (params) => {
-=======
   getAvailableSections: async (params = {}) => {
->>>>>>> ab345606e178b1fe8caa63479a7129ff7ec1a4d9
     try {
       const response = await api.get('/enrollments/available-sections', { params })
       return response.data
@@ -80,18 +76,9 @@ const enrollmentService = {
   searchStudents: async (query) => {
     try {
       if (!query) return { data: [] }
-<<<<<<< HEAD
-      const response = await api.get('/students', {
-        params: { search: query, limit: 10 }
-      })
-      return {
-        data: Array.isArray(response.data) ? response.data : response.data?.data || []
-      }
-=======
       const response = await api.get('/students', { params: { search: query, limit: 10 } })
       const data = Array.isArray(response.data) ? response.data : response.data?.data || []
       return { data }
->>>>>>> ab345606e178b1fe8caa63479a7129ff7ec1a4d9
     } catch (error) {
       throw error.response?.data || error.message
     }
@@ -100,11 +87,7 @@ const enrollmentService = {
   getSectionsBySemester: async (semesterId) => {
     try {
       const response = await api.get('/class-sections', {
-<<<<<<< HEAD
-        params: { semester_id: semesterId, status: 'open', limit: 100 }
-=======
         params: { semester_id: semesterId, status: 'open', limit: 100 },
->>>>>>> ab345606e178b1fe8caa63479a7129ff7ec1a4d9
       })
       return response.data
     } catch (error) {
@@ -114,26 +97,12 @@ const enrollmentService = {
 
   getSemesters: async () => {
     try {
-<<<<<<< HEAD
-      const response = await api.get('/semesters', {
-        params: { limit: 50 }
-      })
-=======
       const response = await api.get('/semesters', { params: { limit: 50 } })
->>>>>>> ab345606e178b1fe8caa63479a7129ff7ec1a4d9
       return response.data
     } catch (error) {
       throw error.response?.data || error.message
     }
-<<<<<<< HEAD
-  }
-}
-
-export default enrollmentService
-
-=======
   },
 }
 
 export default enrollmentService
->>>>>>> ab345606e178b1fe8caa63479a7129ff7ec1a4d9
