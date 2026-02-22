@@ -21,6 +21,7 @@ import FacultyCreate from './pages/admin/faculty/FacultyCreate';
 import FacultyEdit from './pages/admin/faculty/FacultyEdit';
 import FacultyView from './pages/admin/faculty/FacultyView';
 import DashboardFaculty from './pages/faculty/dashboard/DashboardFaculty';
+import MyCourses from './pages/faculty/myCourses/MyCourses';
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
 
           {/* Faculty */}
           <Route path="/faculty" element={<DashboardFaculty />} />
+          <Route path="/faculty/myCourses" element={<MyCourses />} />
 
           {/* User routes */}
           <Route path="/admin/users" element={<UserList />} />
