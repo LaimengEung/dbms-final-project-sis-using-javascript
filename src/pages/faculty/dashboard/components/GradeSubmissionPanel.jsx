@@ -49,8 +49,11 @@ const GradeSubmissionPanel = ({ reminders, onPostGrades }) => {
           padding: "24px",
           fontFamily: "'DM Sans', sans-serif",
           minWidth: "320px",
-          maxWidth: "520px",
+          height: "100%",
+          boxSizing: "border-box",
           transition: "background-color 0.3s ease, border-color 0.3s ease",
+          display: "flex",         
+          flexDirection: "column",
         }}
       >
         {/* Header */}
@@ -92,16 +95,14 @@ const GradeSubmissionPanel = ({ reminders, onPostGrades }) => {
               ))}
             </div>
 
-            <button
-              style={{
-                ...styles.postButton,
-                backgroundColor: theme.buttonBg,
-                color: theme.buttonColor,
-              }}
-              onClick={onPostGrades}
-            >
-              Post Grades
-            </button>
+            <div style={{ marginTop: "auto" }}>
+              <button 
+                style={{ ...styles.postButton, backgroundColor: theme.buttonBg, color: theme.buttonColor }} 
+                onClick={onPostGrades}
+              >
+                Post Grades
+              </button>
+            </div>
           </>
         )}
 
@@ -170,7 +171,7 @@ const styles = {
     alignItems: "center",
   },
   reminderLabel: {
-    fontSize: "14px",
+    fontSize: "15px",
     fontWeight: "400",
     color: "#1a1a2e",
   },

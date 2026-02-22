@@ -36,10 +36,10 @@ const TodaySchedulePanel = ({ schedules, onViewFull}) => {
             ))}
             </div>
 
-            {/* Footer link */}
+            {/* View Full Schedule button */}
             <div style={styles.footer}>
-            <button style={styles.viewLink} onClick={onViewFull}>
-                View Full Schedule →
+            <button style={styles.viewButton} onClick={onViewFull}>
+              View Full Schedule
             </button>
             </div>
         </div>
@@ -55,7 +55,10 @@ const styles = {
     boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
     fontFamily: "'DM Sans', sans-serif",
     minWidth: "320px",
-    maxWidth: "480px",
+    height: "100%",
+    boxSizing: "border-box",
+    display: "flex",         
+    flexDirection: "column",
   },
   header: {
     display: "flex",
@@ -77,7 +80,21 @@ const styles = {
   footer: {
     display: "flex",
     justifyContent: "center",
-    marginTop: "16px",
+    marginTop: "auto",
+  },
+  viewButton: {
+    width: "100%",
+    padding: "14px",
+    backgroundColor: "#3b6ee8",
+    color: "#ffffff",
+    border: "none",
+    borderRadius: "10px",
+    fontSize: "15px",
+    fontWeight: "600",
+    fontFamily: "'DM Sans', sans-serif",
+    cursor: "pointer",
+    letterSpacing: "0.01em",
+    transition: "background-color 0.3s ease, color 0.3s ease",
   },
   viewLink: {
     background: "none",

@@ -17,7 +17,11 @@ const studentService = {
     return {
       data: response.data?.data || response.data,
       status: response.status,
+<<<<<<< HEAD
       message: response.data?.message || 'Student created successfully!'
+=======
+      message: response.data?.message || 'Student created successfully!',
+>>>>>>> ab345606e178b1fe8caa63479a7129ff7ec1a4d9
     }
   },
 
@@ -26,7 +30,11 @@ const studentService = {
     return {
       data: response.data?.data || response.data,
       status: response.status,
+<<<<<<< HEAD
       message: response.data?.message || 'Student updated successfully!'
+=======
+      message: response.data?.message || 'Student updated successfully!',
+>>>>>>> ab345606e178b1fe8caa63479a7129ff7ec1a4d9
     }
   },
 
@@ -35,7 +43,11 @@ const studentService = {
     return {
       data: response.data?.data || {},
       status: response.status,
+<<<<<<< HEAD
       message: response.data?.message || 'Student deleted successfully!'
+=======
+      message: response.data?.message || 'Student deleted successfully!',
+>>>>>>> ab345606e178b1fe8caa63479a7129ff7ec1a4d9
     }
   },
 
@@ -43,7 +55,11 @@ const studentService = {
     const response = await api.get(`/students/${studentId}/enrollments`)
     const data = Array.isArray(response.data) ? response.data : response.data?.data || []
     return { data, status: response.status }
+<<<<<<< HEAD
   }
+=======
+  },
+>>>>>>> ab345606e178b1fe8caa63479a7129ff7ec1a4d9
 }
 
 export default studentService
