@@ -35,7 +35,7 @@ const Header = ({
         <div className="flex items-center justify-between h-16">
 
           {/* Left: Mobile menu button & Brand */}
-          <div className="flex items-center">
+          <div className="flex items-center flex-1 mr-4">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="md:hidden p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100"
@@ -43,35 +43,20 @@ const Header = ({
               {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
 
-            <div className="ml-4 md:ml-0 flex items-center">
-              <Link to={logo.path} className="flex items-center">
-                <div className="h-8 w-8 rounded-lg bg-blue-600 flex items-center justify-center">
-                  {logo.icon}
+            <div className="flex-1 min-w-0 hidden lg:flex">
+              <form onSubmit={handleSearch} className="relative w-full">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Search size={18} className="text-gray-400" />
                 </div>
-                <div className="ml-3">
-                  <h1 className="text-xl font-bold text-gray-900">{logo.label}</h1>
-                  {logo.subLabel && (
-                    <p className="text-xs text-gray-500 hidden sm:block">{logo.subLabel}</p>
-                  )}
-                </div>
-              </Link>
+                <input
+                  type="search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder={searchPlaceholder}
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </form>
             </div>
-          </div>
-
-          {/* Center: Search Bar */}
-          <div className="flex-1 max-w-2xl mx-4 hidden lg:block">
-            <form onSubmit={handleSearch} className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search size={18} className="text-gray-400" />
-              </div>
-              <input
-                type="search"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={searchPlaceholder}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-            </form>
           </div>
 
           {/* Right: Actions */}
