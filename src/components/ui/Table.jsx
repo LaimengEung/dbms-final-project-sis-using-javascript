@@ -20,7 +20,7 @@ const Table = ({
                   scope="col"
                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                 >
-                  {column.header}
+                  {column.header || column.label || ''}
                 </th>
               ))}
             </tr>
@@ -58,7 +58,16 @@ const Table = ({
                       key={colIndex}
                       className="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
                     >
-                      {column.cell ? column.cell(row) : row[column.accessor]}
+                      {(() => {
+                        if (column.cell) return column.cell(row);
+                        if (column.render) {
+                          const dataKey = column.accessor || column.key;
+                          const value = dataKey ? row[dataKey] : undefined;
+                          return column.render(value, row);
+                        }
+                        const dataKey = column.accessor || column.key;
+                        return dataKey ? row[dataKey] : '';
+                      })()}
                     </td>
                   ))}
                 </tr>

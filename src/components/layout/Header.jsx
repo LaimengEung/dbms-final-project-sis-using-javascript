@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Bell, Search, Menu, X, User, Settings, LogOut, HelpCircle, Moon, Sun, ChevronDown, GraduationCap } from 'lucide-react';
+import { useTheme } from '../../context/ThemeContext';
 
 const Header = ({
   user = { name: "User", email: "user@school.edu", role: "User" },
@@ -14,8 +15,8 @@ const Header = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { isDark, toggleTheme } = useTheme();
 
   const unreadCount = notifications.filter(n => n.unread).length;
 
@@ -69,10 +70,10 @@ const Header = ({
 
             {/* Dark Mode Toggle */}
             <button
-              onClick={() => setIsDarkMode(!isDarkMode)}
+              onClick={toggleTheme}
               className="p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100 hidden md:block"
             >
-              {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+              {isDark ? <Sun size={20} /> : <Moon size={20} />}
             </button>
 
             {/* Help */}
@@ -169,10 +170,10 @@ const Header = ({
                     ))}
 
                     <button
-                      onClick={() => setIsDarkMode(!isDarkMode)}
+                      onClick={toggleTheme}
                       className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >
-                      {isDarkMode ? <><Sun size={16} className="mr-3" />Light Mode</> : <><Moon size={16} className="mr-3" />Dark Mode</>}
+                      {isDark ? <><Sun size={16} className="mr-3" />Light Mode</> : <><Moon size={16} className="mr-3" />Dark Mode</>}
                     </button>
                   </div>
 
