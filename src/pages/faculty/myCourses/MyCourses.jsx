@@ -84,9 +84,9 @@ const MyCourses = ({ courses = defaultCourses }) => {
 
         <div
           style={{
-            display: "flex",
+            display: "grid",
             justifyContent: "space-between",
-            gridTemplateColumns: "repeat(3, 1fr)",
+            gridTemplateColumns: "repeat(2, 1fr)",
             gap: "18px",
           }}
         >
