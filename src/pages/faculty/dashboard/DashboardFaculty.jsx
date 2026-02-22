@@ -5,6 +5,10 @@ import FacultyLayout from "../../../components/layout/FacultyLayout";
 import ClassEnrollmentPanel from "./components/ClassEnrollmentPanel";
 import TodaySchedulePanel from "./components/TodaySchedulePanel";
 import GradeSubmissionPanel from "./components/GradeSubmissionPanel";
+import PendingApprovalPanel from "./components/PendingApprovalPanel";
+
+const DashboardUserName = "James Sok";
+const DashboardUserGender = "M";
 
 const DashboardFaculty = () => {
   return (
@@ -14,15 +18,25 @@ const DashboardFaculty = () => {
           className="Welcome-User"
           style={{ fontSize: "20px", fontWeight: "500" }}
         >
-          Welcome back
+          Welcome back, {DashboardUserGender === "M" ? "Mr." : DashboardUserGender === "F" ? "Ms." : ""} {DashboardUserName}
         </h1>
         <p classname="Welcome-Subtitle">
           Here's what's happening with your courses and students
         </p>
       </div>
+
       <ClassEnrollmentPanel />
-      <TodaySchedulePanel />
-      <GradeSubmissionPanel />
+      <div style={{ display: "flex", gap: "24px", alignItems: "stretch", marginTop: "24px" }}>
+        <div style={{ flex: 1 }}>
+          <TodaySchedulePanel /> 
+        </div>
+        <div style={{ flex: 1 }}>
+          <GradeSubmissionPanel />
+        </div>
+        <div style={{ flex: 1 }}>
+          <PendingApprovalPanel />
+        </div>
+      </div>
     </FacultyLayout>
   );
 };
