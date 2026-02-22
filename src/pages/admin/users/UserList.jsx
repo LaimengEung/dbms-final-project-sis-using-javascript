@@ -90,7 +90,7 @@ const UserList = () => {
     try {
       await userService.delete(id)
       // Remove from local state
-      setUsers(users.filter(user => user.user_id !== id))
+      setUsers(users.filter(user => Number(user.user_id) !== Number(id)))
       setDeleteDialog({ open: false, userId: null, userName: '' })
       
       // Show success message
@@ -358,8 +358,8 @@ const UserList = () => {
           confirmText="Delete"
           cancelText="Cancel"
           onConfirm={() => handleDelete(deleteDialog.userId)}
-          onCancel={() => setDeleteDialog({ open: false, userId: null, userName: '' })}
-          type="danger"
+          onClose={() => setDeleteDialog({ open: false, userId: null, userName: '' })}
+          variant="danger"
         />
       </div>
     </AdminLayout>
