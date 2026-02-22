@@ -62,7 +62,7 @@ const PendingApprovalPanel = ({ requests, onViewAll }) => {
 const styles = {
   card: {
     backgroundColor: "#ffffff",
-    borderRadius: "16px",
+    borderRadius: "14px",
     padding: "24px",
     boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
     fontFamily: "'DM Sans', sans-serif",
@@ -80,8 +80,8 @@ const styles = {
   },
   title: {
     margin: 0,
-    fontSize: "18px",
-    fontWeight: "700",
+    fontSize: "20px",
+    fontWeight: "500",
     color: "#1a1a2e",
     letterSpacing: "-0.01em",
   },
@@ -127,8 +127,8 @@ const styles = {
     gap: "2px",
   },
   requestType: {
-    fontSize: "14px",
-    fontWeight: "600",
+    fontSize: "15px",
+    fontWeight: "400",
     color: "#1a1a2e",
   },
   studentName: {

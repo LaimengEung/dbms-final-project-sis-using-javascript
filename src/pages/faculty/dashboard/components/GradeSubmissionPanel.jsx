@@ -171,7 +171,7 @@ const styles = {
     alignItems: "center",
   },
   reminderLabel: {
-    fontSize: "14px",
+    fontSize: "15px",
     fontWeight: "400",
     color: "#1a1a2e",
   },
