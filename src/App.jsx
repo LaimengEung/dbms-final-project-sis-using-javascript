@@ -22,6 +22,7 @@ import FacultyEdit from './pages/admin/faculty/FacultyEdit';
 import FacultyView from './pages/admin/faculty/FacultyView';
 import DashboardFaculty from './pages/faculty/dashboard/DashboardFaculty';
 import MyCourses from './pages/faculty/myCourses/MyCourses';
+import MySchedule from './pages/faculty/mySchedule/MySchedule';
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
           {/* Faculty */}
           <Route path="/faculty" element={<DashboardFaculty />} />
           <Route path="/faculty/myCourses" element={<MyCourses />} />
+          <Route path="/faculty/mySchedule" element={<MySchedule />} />
 
           {/* User routes */}
           <Route path="/admin/users" element={<UserList />} />
