@@ -13,9 +13,6 @@ const TodaySchedulePanel = ({ schedules, onViewFull}) => {
     const items = schedules ?? defaultSchedules;
     return (
       <>
-        {/* Google Font import — drop this link into your <head> if you prefer */}
-        {/* <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');`}</style> */}
-
         <div style={styles.panel}>
           {/* Header */}
             <div style={styles.header}>

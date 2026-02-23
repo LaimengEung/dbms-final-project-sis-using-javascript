@@ -8,17 +8,7 @@ import studentService from '../../../services/studentService'
 import facultyService from '../../../services/facultyService'
 import enrollmentService from '../../../services/enrollmentService'
 import { courseService } from '../../../services/courseService'
-import {
-  Users,
-  GraduationCap,
-  BookOpen,
-  CheckCircle,
-  Clock,
-  Activity,
-  RefreshCw,
-  Settings,
-  Plus,
-} from 'lucide-react'
+import { Users, GraduationCap, BookOpen, CheckCircle, Clock, Activity, RefreshCw, Settings, Plus } from 'lucide-react'
 
 const formatAgo = (dateValue) => {
   if (!dateValue) return 'Unknown time'
