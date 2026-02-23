@@ -23,6 +23,9 @@ import FacultyView from './pages/admin/faculty/FacultyView';
 import DashboardFaculty from './pages/faculty/dashboard/DashboardFaculty';
 import MyCourses from './pages/faculty/myCourses/MyCourses';
 import MySchedule from './pages/faculty/mySchedule/MySchedule';
+import GradeManagement from './pages/faculty/gradeManagement/GradeManagement';
+import StudentRequests from './pages/faculty/studentRequests/StudentRequests';
+
 
 function App() {
   return (
@@ -39,6 +42,8 @@ function App() {
           <Route path="/faculty" element={<DashboardFaculty />} />
           <Route path="/faculty/myCourses" element={<MyCourses />} />
           <Route path="/faculty/mySchedule" element={<MySchedule />} />
+          <Route path="/faculty/gradeManagement" element={<GradeManagement />} />
+          <Route path="/faculty/studentRequests" element={<StudentRequests />} />
 
           {/* User routes */}
           <Route path="/admin/users" element={<UserList />} />
