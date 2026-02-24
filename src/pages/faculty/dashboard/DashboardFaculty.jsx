@@ -7,9 +7,12 @@ import TodaySchedulePanel from "./components/TodaySchedulePanel";
 import GradeSubmissionPanel from "./components/GradeSubmissionPanel";
 import PendingApprovalPanel from "./components/PendingApprovalPanel";
 
+const ViewSchedulePath = "/faculty/mySchedule";
+const ManageGradesPath = "/faculty/gradeManagement"
+const ViewRequestsPath = "/faculty/studentRequests";
+
 const DashboardUserName = "James Sok";
 const DashboardUserGender = "M";
-
 const DashboardFaculty = () => {
   return (
     <FacultyLayout>
@@ -25,13 +28,13 @@ const DashboardFaculty = () => {
       <ClassEnrollmentPanel />
       <div style={{ display: "flex", gap: "24px", alignItems: "stretch", marginTop: "24px" }}>
         <div style={{ flex: 1 }}>
-          <TodaySchedulePanel /> 
+          <TodaySchedulePanel onViewSchedule={ViewSchedulePath} /> 
         </div>
         <div style={{ flex: 1 }}>
-          <GradeSubmissionPanel />
+          <GradeSubmissionPanel onPostGrades={ManageGradesPath}/>
         </div>
         <div style={{ flex: 1 }}>
-          <PendingApprovalPanel />
+          <PendingApprovalPanel onViewRequests={ViewRequestsPath} />
         </div>
       </div>
     </FacultyLayout>

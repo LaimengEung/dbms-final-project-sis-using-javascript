@@ -1,14 +1,16 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 import { CircleAlert, CircleCheckBig } from "lucide-react"
 
-const PendingApprovalPanel = ({ requests, onViewAll }) => {
+const PendingApprovalPanel = ({ requests, onViewRequests }) => {
   const defaultRequests = [
     { type: "Grade Appeal",          studentName: "James Wilson" },
     { type: "Recommendation Letter", studentName: "Lisa Park" },
     { type: "Course Withdrawal",     studentName: "David Kumar" },
   ];
 
+  const navigate = useNavigate();
   const items = requests ?? defaultRequests;
   const hasPending = items.length > 0;
 
@@ -48,7 +50,7 @@ const PendingApprovalPanel = ({ requests, onViewAll }) => {
 
         
         <div style={{ marginTop: "auto" }}>
-            <button style={styles.viewButton} onClick={onViewAll}>
+            <button style={styles.viewButton} onClick={() => navigate(onViewRequests)}>
                 View All Requests
             </button>
         </div>

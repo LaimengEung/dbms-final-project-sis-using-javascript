@@ -1,14 +1,16 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 import { CircleAlert, CircleCheckBig } from "lucide-react"
 
-const GradeSubmissionPanel = ({ reminders, onPostGrades }) => {
+const GradeSubmissionPanel = ({reminders, onPostGrades }) => {
   const defaultReminders = [
     { course: "CS 301", label: "Final Grades",   dueIn: 3 },
     { course: "CS 450", label: "Midterm Grades",  dueIn: 5 },
     { course: "CS 490", label: "Project Grades",  dueIn: 7 },
   ];
 
+  const navigate = useNavigate();
   const items = reminders ?? defaultReminders;
   const hasPending = items.length > 0;
 
@@ -96,7 +98,7 @@ const GradeSubmissionPanel = ({ reminders, onPostGrades }) => {
             <div style={{ marginTop: "auto" }}>
               <button 
                 style={{ ...styles.postButton, backgroundColor: theme.buttonBg, color: theme.buttonColor }} 
-                onClick={onPostGrades}
+                onClick={() => navigate(onPostGrades)}
               >
                 Post Grades
               </button>
