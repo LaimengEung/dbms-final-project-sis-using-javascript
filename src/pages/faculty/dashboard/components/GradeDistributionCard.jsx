@@ -25,8 +25,7 @@ const GradeDistributionCard = ({ distribution = { A: 3, B: 3, C: 1, D: 0, F: 0 }
           fontFamily: "'DM Sans', sans-serif",
           flex: 1,
           height: "100%",
-          boxSizing: "border-box",
-          flex: 1
+          boxSizing: "border-box"
         }}
       >
         <div style={{ fontSize: "14px", fontWeight: 500, color: "#374151", marginBottom: "20px" }}>

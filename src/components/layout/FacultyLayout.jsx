@@ -13,10 +13,25 @@ const facultyMenu = [
   { icon: <ClipboardList />, label: 'Student Requests', path: '/faculty/studentRequests' },
 ];
 
-const facultyUser = {
-  name: "Faculty User",
-  email: "faculty@school.edu",
-  initials: "F",
+const getFacultyUser = () => {
+  try {
+    const current = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    const firstName = String(current.first_name || '').trim();
+    const lastName = String(current.last_name || '').trim();
+    const name = [firstName, lastName].filter(Boolean).join(' ').trim() || 'Faculty User';
+    const initials = `${firstName.slice(0, 1)}${lastName.slice(0, 1)}`.toUpperCase() || 'F';
+    return {
+      name,
+      email: current.email || 'faculty@school.edu',
+      initials,
+    };
+  } catch {
+    return {
+      name: 'Faculty User',
+      email: 'faculty@school.edu',
+      initials: 'F',
+    };
+  }
 };
 
 const facultyNotifications = [
@@ -32,6 +47,7 @@ const facultyProfileLinks = [
 
 const FacultyLayout = ({ children, title = "Dashboard" }) => {
   const navigate = useNavigate()
+  const facultyUser = getFacultyUser()
   const handleLogout = () => {
     localStorage.removeItem('currentUser')
     localStorage.removeItem('accessToken')

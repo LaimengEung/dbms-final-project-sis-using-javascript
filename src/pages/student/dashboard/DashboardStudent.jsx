@@ -1,35 +1,31 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import StudentLayout from '../../../components/layout/StudentLayout';
-import { Alert, Badge, Card, Select, Spinner, Table } from '../../../components/ui';
+import { Alert, Badge, Card, Spinner, Table } from '../../../components/ui';
 import studentService from '../../../services/studentService';
+import EmptyState from '../../../components/shared/EmptyState';
 
 const DashboardStudent = () => {
   const [students, setStudents] = useState([]);
-  const [selectedStudentId, setSelectedStudentId] = useState('');
   const [enrollments, setEnrollments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingEnrollments, setLoadingEnrollments] = useState(false);
   const [error, setError] = useState('');
+  const [enrollmentError, setEnrollmentError] = useState('');
 
-  const selectedStudent = useMemo(
-    () => students.find((s) => Number(s.student_id) === Number(selectedStudentId)),
-    [students, selectedStudentId]
-  );
+  const selectedStudent = useMemo(() => (students.length ? students[0] : null), [students]);
+  const selectedStudentId = selectedStudent ? String(selectedStudent.student_id) : '';
 
   useEffect(() => {
     const loadStudents = async () => {
       try {
         setLoading(true);
         setError('');
-        const response = await studentService.getAll({ limit: 100 });
+        const response = await studentService.getAll({ limit: 1 });
         const list = Array.isArray(response?.data) ? response.data : [];
         setStudents(list);
-        if (list.length > 0) {
-          setSelectedStudentId(String(list[0].student_id));
-        }
       } catch (err) {
-        console.error(err);
-        setError('Failed to load students for dashboard.');
+        console.error('Failed to load student profile:', err);
+        setError(err?.response?.data?.message || 'Failed to load your student profile.');
       } finally {
         setLoading(false);
       }
@@ -42,15 +38,18 @@ const DashboardStudent = () => {
     const loadEnrollments = async () => {
       if (!selectedStudentId) {
         setEnrollments([]);
+        setEnrollmentError('');
         return;
       }
       try {
         setLoadingEnrollments(true);
+        setEnrollmentError('');
         const response = await studentService.getEnrollments(selectedStudentId);
         setEnrollments(Array.isArray(response?.data) ? response.data : []);
       } catch (err) {
-        console.error(err);
+        console.error('Failed to load enrollments:', err);
         setEnrollments([]);
+        setEnrollmentError(err?.response?.data?.message || 'Failed to load enrollments.');
       } finally {
         setLoadingEnrollments(false);
       }
@@ -83,11 +82,6 @@ const DashboardStudent = () => {
     },
   ];
 
-  const studentOptions = students.map((s) => ({
-    value: String(s.student_id),
-    label: `${s.first_name} ${s.last_name} (#${s.student_id})`,
-  }));
-
   return (
     <StudentLayout>
       <div className="space-y-6">
@@ -105,30 +99,23 @@ const DashboardStudent = () => {
         ) : (
           <>
             <Card>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
-                <Select
-                  label="Select Student"
-                  options={studentOptions}
-                  value={selectedStudentId}
-                  onChange={(e) => setSelectedStudentId(e.target.value)}
-                  placeholder="Choose student"
-                />
-                <div className="md:col-span-2">
-                  {selectedStudent ? (
-                    <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                      <div className="font-semibold text-gray-900">
-                        {selectedStudent.first_name} {selectedStudent.last_name}
-                      </div>
-                      <div className="text-sm text-gray-600">{selectedStudent.email}</div>
-                      <div className="text-sm text-gray-500 mt-1">
-                        Student #{selectedStudent.student_number} | Major: {selectedStudent.major_name || 'Undeclared'}
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="text-sm text-gray-500">No student selected.</div>
-                  )}
+              {selectedStudent ? (
+                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                  <div className="font-semibold text-gray-900">
+                    {selectedStudent.first_name} {selectedStudent.last_name}
+                  </div>
+                  <div className="text-sm text-gray-600">{selectedStudent.email}</div>
+                  <div className="text-sm text-gray-500 mt-1">
+                    Student #{selectedStudent.student_number} | Major: {selectedStudent.major_name || 'Undeclared'}
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <EmptyState
+                  title="No student profile found"
+                  description="Your account is active, but no student profile is linked yet. Contact the admin."
+                  className="py-6"
+                />
+              )}
             </Card>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
@@ -151,10 +138,21 @@ const DashboardStudent = () => {
             </div>
 
             <Card title="My Enrollments" subtitle="Courses and grade progress">
+              {enrollmentError && (
+                <div className="mb-4">
+                  <Alert type="error" title="Enrollment Error" message={enrollmentError} />
+                </div>
+              )}
               {loadingEnrollments ? (
                 <div className="py-12 flex justify-center">
                   <Spinner />
                 </div>
+              ) : enrollments.length === 0 ? (
+                <EmptyState
+                  title="No enrollments yet"
+                  description="You have not enrolled in any section yet."
+                  className="py-8"
+                />
               ) : (
                 <Table columns={enrollmentColumns} data={enrollments} />
               )}
