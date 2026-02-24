@@ -32,12 +32,10 @@ const MySchedule = ({
 
   return (
     <FacultyLayout>
-      <div style={{ fontFamily: "'DM Sans', sans-serif" }}>
-
-        {/* Page header */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "24px" }}>
+      <div>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "20px" }}>
           <div>
-            <h1 style={{ margin: 0, fontSize: "20px", fontWeight: 700, color: "#111827" }}>My Schedule</h1>
+            <h1 style={{ fontSize: "20px", fontWeight: 500, color: "#111827" }}>My Schedule</h1>
             <p style={{ margin: "4px 0 0", fontSize: "13.5px", color: "#6b7280" }}>View your teaching schedule and office hours</p>
           </div>
 
