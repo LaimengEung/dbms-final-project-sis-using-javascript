@@ -26,6 +26,7 @@ import MySchedule from './pages/faculty/mySchedule/MySchedule';
 import GradeManagement from './pages/faculty/gradeManagement/GradeManagement';
 import StudentRequests from './pages/faculty/studentRequests/StudentRequests';
 import ViewStudentsPanel from './pages/faculty/dashboard/components/ViewStudentsPanel';
+import ManageGradePanel from './pages/faculty/dashboard/components/ManageGradePanel';
 
 
 function App() {
@@ -42,6 +43,7 @@ function App() {
           {/* Faculty */}
           <Route path="/faculty" element={<DashboardFaculty />} />
           <Route path="/faculty/courses/:courseId/students" element={<ViewStudentsPanel />} />
+          <Route path="/faculty/courses/:courseId/grades" element={<ManageGradePanel />} />
           <Route path="/faculty/myCourses" element={<MyCourses />} />
           <Route path="/faculty/mySchedule" element={<MySchedule />} />
           <Route path="/faculty/gradeManagement" element={<GradeManagement />} />
