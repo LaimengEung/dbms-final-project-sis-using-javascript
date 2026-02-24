@@ -42,7 +42,7 @@ const ClassEnrollmentPanel = ({ courses = defaultCourses }) => {
   };
   
   const handleManageGrades = (course) =>
-    alert(`Managing grades for ${course.code}`);
+    navigate(`/faculty/courses/${course.id}/grades`);
 
   return (
     <>
@@ -74,6 +74,10 @@ const ClassEnrollmentPanel = ({ courses = defaultCourses }) => {
           </h2>
           <a
             href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              navigate("/faculty/myCourses");
+            }}
             style={{
               color: "#3b5bff",
               fontSize: "14px",
@@ -89,7 +93,7 @@ const ClassEnrollmentPanel = ({ courses = defaultCourses }) => {
           >
             View All Courses
           </a>
-        </div>
+        </div> 
 
         <div
           style={{

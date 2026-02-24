@@ -14,8 +14,6 @@ const PendingApprovalPanel = ({ requests, onViewAll }) => {
 
   return (
     <>
-      {/* <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');`}</style> */}
-
       <div style={styles.card}>
         {/* Header */}
         <div style={styles.header}>
@@ -144,7 +142,7 @@ const styles = {
     border: "none",
     borderRadius: "10px",
     fontSize: "15px",
-    fontWeight: "600",
+    fontWeight: "500",
     fontFamily: "'DM Sans', sans-serif",
     cursor: "pointer",
     letterSpacing: "0.01em",

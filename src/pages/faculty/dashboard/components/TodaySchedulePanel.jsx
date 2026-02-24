@@ -87,7 +87,7 @@ const styles = {
     border: "none",
     borderRadius: "10px",
     fontSize: "15px",
-    fontWeight: "600",
+    fontWeight: "500",
     fontFamily: "'DM Sans', sans-serif",
     cursor: "pointer",
     letterSpacing: "0.01em",

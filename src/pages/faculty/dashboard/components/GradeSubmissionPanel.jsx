@@ -39,8 +39,6 @@ const GradeSubmissionPanel = ({ reminders, onPostGrades }) => {
 
   return (
     <>
-      {/* <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');`}</style> */}
-
       <div
         style={{
           backgroundColor: theme.cardBg,
@@ -109,19 +107,7 @@ const GradeSubmissionPanel = ({ reminders, onPostGrades }) => {
         {/* Empty state */}
         {!hasPending && (
           <div style={styles.emptyState}>
-            <svg
-              width="40"
-              height="40"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#d1d5db"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-              <polyline points="22 4 12 14.01 9 11.01" />
-            </svg>
+            <CircleCheckBig width="40" height="40" stroke="#d1d5db" />
             <p style={styles.emptyText}>You're all caught up!</p>
           </div>
         )}
@@ -186,7 +172,7 @@ const styles = {
     border: "none",
     borderRadius: "10px",
     fontSize: "15px",
-    fontWeight: "600",
+    fontWeight: "500",
     fontFamily: "'DM Sans', sans-serif",
     cursor: "pointer",
     letterSpacing: "0.01em",
