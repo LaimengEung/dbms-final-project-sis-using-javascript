@@ -24,6 +24,9 @@ import SemesterList from './pages/admin/semesters/SemesterList';
 import DashboardFaculty from './pages/faculty/dashboard/DashboardFaculty';
 import MyCourses from './pages/faculty/myCourses/MyCourses';
 import MySchedule from './pages/faculty/mySchedule/MySchedule';
+import DashboardStudent from './pages/student/dashboard/DashboardStudent';
+import RoleLogin from './pages/auth/RoleLogin';
+import ProtectedRoute from './components/auth/ProtectedRoute';
 
 function App() {
   return (
@@ -32,14 +35,55 @@ function App() {
         <Routes>
           {/* Root */}
           <Route path="/" element={<HomeDefault />} />
+          <Route path="/login" element={<Navigate to="/login/student" replace />} />
+          <Route path="/login/:role" element={<RoleLogin />} />
 
           {/* Admin Dashboard */}
           <Route path="/admin" element={<Dashboard />} />
 
           {/* Faculty */}
-          <Route path="/faculty" element={<DashboardFaculty />} />
-          <Route path="/faculty/myCourses" element={<MyCourses />} />
-          <Route path="/faculty/mySchedule" element={<MySchedule />} />
+          <Route
+            path="/faculty"
+            element={
+              <ProtectedRoute allowedRoles={['teacher', 'faculty']}>
+                <DashboardFaculty />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/faculty/myCourses"
+            element={
+              <ProtectedRoute allowedRoles={['teacher', 'faculty']}>
+                <MyCourses />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/faculty/mySchedule"
+            element={
+              <ProtectedRoute allowedRoles={['teacher', 'faculty']}>
+                <MySchedule />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Student */}
+          <Route
+            path="/student"
+            element={
+              <ProtectedRoute allowedRoles={['student']}>
+                <DashboardStudent />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/registrar"
+            element={
+              <ProtectedRoute allowedRoles={['registrar']}>
+                <Navigate to="/" replace />
+              </ProtectedRoute>
+            }
+          />
 
           {/* User routes */}
           <Route path="/admin/users" element={<UserList />} />
