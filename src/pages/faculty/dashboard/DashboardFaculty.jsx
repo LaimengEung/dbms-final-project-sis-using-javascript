@@ -7,20 +7,20 @@ import TodaySchedulePanel from "./components/TodaySchedulePanel";
 import GradeSubmissionPanel from "./components/GradeSubmissionPanel";
 import PendingApprovalPanel from "./components/PendingApprovalPanel";
 
+const ViewSchedulePath = "/faculty/mySchedule";
+const ManageGradesPath = "/faculty/gradeManagement"
+const ViewRequestsPath = "/faculty/studentRequests";
+
 const DashboardUserName = "James Sok";
 const DashboardUserGender = "M";
-
 const DashboardFaculty = () => {
   return (
     <FacultyLayout>
-      <div className="Welcome-Section" style={{ marginBottom: 20 }}>
-        <h1
-          className="Welcome-User"
-          style={{ fontSize: "20px", fontWeight: "500" }}
-        >
+      <div style={{ marginBottom: 20 }}>
+        <h1 style={{ fontSize: "20px", fontWeight: "500" }}>
           Welcome back, {DashboardUserGender === "M" ? "Mr." : DashboardUserGender === "F" ? "Ms." : ""} {DashboardUserName}
         </h1>
-        <p classname="Welcome-Subtitle">
+        <p style={{ margin: "4px 0 0", fontSize: "13.5px", color: "#6b7280" }}>
           Here's what's happening with your courses and students
         </p>
       </div>
@@ -28,13 +28,13 @@ const DashboardFaculty = () => {
       <ClassEnrollmentPanel />
       <div style={{ display: "flex", gap: "24px", alignItems: "stretch", marginTop: "24px" }}>
         <div style={{ flex: 1 }}>
-          <TodaySchedulePanel /> 
+          <TodaySchedulePanel onViewSchedule={ViewSchedulePath} /> 
         </div>
         <div style={{ flex: 1 }}>
-          <GradeSubmissionPanel />
+          <GradeSubmissionPanel onPostGrades={ManageGradesPath}/>
         </div>
         <div style={{ flex: 1 }}>
-          <PendingApprovalPanel />
+          <PendingApprovalPanel onViewRequests={ViewRequestsPath} />
         </div>
       </div>
     </FacultyLayout>

@@ -30,6 +30,11 @@ import ChangePassword from './pages/auth/ChangePassword';
 import ForgotPassword from './pages/auth/ForgotPassword';
 import ResetPassword from './pages/auth/ResetPassword';
 import ProtectedRoute from './components/auth/ProtectedRoute';
+import GradeManagement from './pages/faculty/gradeManagement/GradeManagement';
+import StudentRequests from './pages/faculty/studentRequests/StudentRequests';
+import ViewStudentsPanel from './pages/faculty/dashboard/components/ViewStudentsPanel';
+import ManageGradePanel from './pages/faculty/dashboard/components/ManageGradePanel';
+
 
 const AdminRoute = ({ children }) => (
   <ProtectedRoute allowedRoles={['admin']}>
@@ -103,6 +108,13 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route path="/faculty" element={<DashboardFaculty />} />
+          <Route path="/faculty/courses/:courseId/students" element={<ViewStudentsPanel />} />
+          <Route path="/faculty/courses/:courseId/grades" element={<ManageGradePanel />} />
+          <Route path="/faculty/myCourses" element={<MyCourses />} />
+          <Route path="/faculty/mySchedule" element={<MySchedule />} />
+          <Route path="/faculty/gradeManagement" element={<GradeManagement />} />
+          <Route path="/faculty/studentRequests" element={<StudentRequests />} />
 
           {/* User routes */}
           <Route path="/admin/users" element={<AdminRoute><UserList /></AdminRoute>} />

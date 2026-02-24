@@ -63,13 +63,10 @@ const MyCourses = ({ courses = defaultCourses }) => {
           }}
         >
           <div>
-            <h1
-              className="Page-Title"
-              style={{ fontSize: "20px", fontWeight: "500" }}
-            >
+            <h1 style={{ fontSize: "20px", fontWeight: "500" }}>
               My Courses
             </h1>
-            <p className="Page-Subtitle">
+            <p style={{ margin: "4px 0 0", fontSize: "13.5px", color: "#6b7280" }}>
               Manage your courses and students 
             </p>
           </div>

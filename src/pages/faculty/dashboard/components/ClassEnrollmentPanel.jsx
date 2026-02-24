@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import ClassEnrollCard from "./ClassEnrollCard";
 
 const defaultCourses = [
@@ -34,14 +35,17 @@ const defaultCourses = [
 ];
 
 const ClassEnrollmentPanel = ({ courses = defaultCourses }) => {
-  const handleViewStudents = (course) =>
-    alert(`Viewing students for ${course.code}`);
+  const navigate = useNavigate();
+
+  const handleViewStudents = (course) => {
+    navigate(`/faculty/courses/${course.id}/students`);
+  };
+  
   const handleManageGrades = (course) =>
-    alert(`Managing grades for ${course.code}`);
+    navigate(`/faculty/courses/${course.id}/grades`);
 
   return (
     <>
-      {/* <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');`}</style> */}
       <div
         style={{
           fontFamily: "'DM Sans', sans-serif",
@@ -70,6 +74,10 @@ const ClassEnrollmentPanel = ({ courses = defaultCourses }) => {
           </h2>
           <a
             href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              navigate("/faculty/myCourses");
+            }}
             style={{
               color: "#3b5bff",
               fontSize: "14px",
@@ -85,7 +93,7 @@ const ClassEnrollmentPanel = ({ courses = defaultCourses }) => {
           >
             View All Courses
           </a>
-        </div>
+        </div> 
 
         <div
           style={{

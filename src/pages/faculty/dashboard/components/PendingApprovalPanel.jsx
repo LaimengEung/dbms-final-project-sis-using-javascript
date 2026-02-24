@@ -1,21 +1,21 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 import { CircleAlert, CircleCheckBig } from "lucide-react"
 
-const PendingApprovalPanel = ({ requests, onViewAll }) => {
+const PendingApprovalPanel = ({ requests, onViewRequests }) => {
   const defaultRequests = [
     { type: "Grade Appeal",          studentName: "James Wilson" },
     { type: "Recommendation Letter", studentName: "Lisa Park" },
     { type: "Course Withdrawal",     studentName: "David Kumar" },
   ];
 
+  const navigate = useNavigate();
   const items = requests ?? defaultRequests;
   const hasPending = items.length > 0;
 
   return (
     <>
-      {/* <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');`}</style> */}
-
       <div style={styles.card}>
         {/* Header */}
         <div style={styles.header}>
@@ -50,7 +50,7 @@ const PendingApprovalPanel = ({ requests, onViewAll }) => {
 
         
         <div style={{ marginTop: "auto" }}>
-            <button style={styles.viewButton} onClick={onViewAll}>
+            <button style={styles.viewButton} onClick={() => navigate(onViewRequests)}>
                 View All Requests
             </button>
         </div>
@@ -144,7 +144,7 @@ const styles = {
     border: "none",
     borderRadius: "10px",
     fontSize: "15px",
-    fontWeight: "600",
+    fontWeight: "500",
     fontFamily: "'DM Sans', sans-serif",
     cursor: "pointer",
     letterSpacing: "0.01em",

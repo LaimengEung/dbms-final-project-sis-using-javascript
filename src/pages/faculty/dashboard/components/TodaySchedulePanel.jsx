@@ -1,21 +1,20 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import ScheduleBar from "./ScheduleBar";
 
 import { Calendar, MoveRight } from "lucide-react"
 
-const TodaySchedulePanel = ({ schedules, onViewFull}) => {
+const TodaySchedulePanel = ({ schedules, onViewSchedule }) => {
     const defaultSchedules = [
         { courseCode: "CS 301",   timeRange: "9:00 AM - 10:30 AM",  location: "Engineering 201" },
         { courseCode: "MATH 215", timeRange: "1:00 PM - 2:30 PM",   location: "Math Building 105" },
         { courseCode: "CS 315",   timeRange: "3:00 PM - 4:30 PM",   location: "Engineering 203" },
     ];
-    
+
+    const navigate = useNavigate();
     const items = schedules ?? defaultSchedules;
     return (
       <>
-        {/* Google Font import — drop this link into your <head> if you prefer */}
-        {/* <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');`}</style> */}
-
         <div style={styles.panel}>
           {/* Header */}
             <div style={styles.header}>
@@ -38,7 +37,7 @@ const TodaySchedulePanel = ({ schedules, onViewFull}) => {
 
             {/* View Full Schedule button */}
             <div style={styles.footer}>
-            <button style={styles.viewButton} onClick={onViewFull}>
+            <button style={styles.viewButton} onClick={() => navigate(onViewSchedule)}>
               View Full Schedule
             </button>
             </div>
@@ -90,7 +89,7 @@ const styles = {
     border: "none",
     borderRadius: "10px",
     fontSize: "15px",
-    fontWeight: "600",
+    fontWeight: "500",
     fontFamily: "'DM Sans', sans-serif",
     cursor: "pointer",
     letterSpacing: "0.01em",
