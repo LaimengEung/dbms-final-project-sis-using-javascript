@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Header from './Header';
 import { LayoutDashboard, Users, User, BookCheck, LayoutGrid, Clipboard, FileText, DollarSign, ChartNoAxesColumn, Settings } from "lucide-react";
@@ -34,13 +35,20 @@ const adminProfileLinks = [
 ];
 
 const AdminLayout = ({ children, title = "Dashboard" }) => {
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('accessToken');
+    navigate('/');
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Sidebar
         menuItems={adminMenu}
         user={adminUser}
         logo={{ icon: <Settings />, label: "SchoolAdmin" }}
-        onLogout={() => console.log("logout")}
+        onLogout={handleLogout}
       />
       <div className="md:pl-64">
         <Header
@@ -49,7 +57,7 @@ const AdminLayout = ({ children, title = "Dashboard" }) => {
           notifications={adminNotifications}
           profileLinks={adminProfileLinks}
           searchPlaceholder="Search students, courses, faculty..."
-          onLogout={() => console.log("logout")}
+          onLogout={handleLogout}
         />
         <main className="py-6 px-4 sm:px-6 lg:px-8">
           {children}

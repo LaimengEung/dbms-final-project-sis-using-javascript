@@ -1,4 +1,5 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import Sidebar from './Sidebar'
 import Header from './Header'
 
@@ -30,13 +31,20 @@ const facultyProfileLinks = [
 ];
 
 const FacultyLayout = ({ children, title = "Dashboard" }) => {
+  const navigate = useNavigate()
+  const handleLogout = () => {
+    localStorage.removeItem('currentUser')
+    localStorage.removeItem('accessToken')
+    navigate('/')
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Sidebar
         menuItems={facultyMenu}
         user={facultyUser}
         logo={{ icon: <Users />, label: "SchoolFaculty" }}
-        onLogout={() => console.log("logout")}
+        onLogout={handleLogout}
       />
       <div className="md:pl-64">
         <Header 
@@ -45,7 +53,7 @@ const FacultyLayout = ({ children, title = "Dashboard" }) => {
           notifications={facultyNotifications}
           profileLinks={facultyProfileLinks}
           searchPlaceholder="Search students, courses, faculty..."
-          onLogout={() => console.log("logout")} />
+          onLogout={handleLogout} />
         <main className="py-6 px-4 sm:px-6 lg:px-8">
           {children}
         </main>

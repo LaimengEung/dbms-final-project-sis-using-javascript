@@ -14,6 +14,7 @@ const FacultyCreate = () => {
     first_name: '',
     last_name: '',
     email: '',
+    password: '',
     faculty_number: `FAC${Date.now().toString().slice(-6)}`,
     title: '',
     department_id: '',
@@ -81,6 +82,15 @@ const FacultyCreate = () => {
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleChange('email', e.target.value)}
+                required
+              />
+              <Input
+                label="Password"
+                type="password"
+                value={formData.password}
+                onChange={(e) => handleChange('password', e.target.value)}
+                placeholder="At least 8 characters"
+                helperText="Set the faculty login password."
                 required
               />
               <Input

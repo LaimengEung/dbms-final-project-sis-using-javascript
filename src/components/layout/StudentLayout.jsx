@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Header from './Header';
 import { BookOpen, GraduationCap, LayoutDashboard, Settings, User } from 'lucide-react';
@@ -25,13 +26,20 @@ const studentProfileLinks = [
 ];
 
 const StudentLayout = ({ children }) => {
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('accessToken');
+    navigate('/');
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Sidebar
         menuItems={studentMenu}
         user={studentUser}
         logo={{ icon: <GraduationCap />, label: 'SchoolStudent' }}
-        onLogout={() => console.log('logout')}
+        onLogout={handleLogout}
       />
       <div className="md:pl-64">
         <Header
@@ -40,7 +48,7 @@ const StudentLayout = ({ children }) => {
           notifications={studentNotifications}
           profileLinks={studentProfileLinks}
           searchPlaceholder="Search courses, sections..."
-          onLogout={() => console.log('logout')}
+          onLogout={handleLogout}
         />
         <main className="py-6 px-4 sm:px-6 lg:px-8">{children}</main>
       </div>

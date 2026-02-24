@@ -6,7 +6,7 @@ function Home() {
   return (
     <div style={{ textAlign: "center", marginTop: "100px" }}>
 
-      <button style={{ backgroundColor: "blue", color: "white" }} onClick={() => navigate("/admin")}>
+      <button style={{ backgroundColor: "blue", color: "white" }} onClick={() => navigate("/login/admin")}>
         Admin
       </button>
 

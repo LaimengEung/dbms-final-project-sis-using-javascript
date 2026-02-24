@@ -26,7 +26,16 @@ import MyCourses from './pages/faculty/myCourses/MyCourses';
 import MySchedule from './pages/faculty/mySchedule/MySchedule';
 import DashboardStudent from './pages/student/dashboard/DashboardStudent';
 import RoleLogin from './pages/auth/RoleLogin';
+import ChangePassword from './pages/auth/ChangePassword';
+import ForgotPassword from './pages/auth/ForgotPassword';
+import ResetPassword from './pages/auth/ResetPassword';
 import ProtectedRoute from './components/auth/ProtectedRoute';
+
+const AdminRoute = ({ children }) => (
+  <ProtectedRoute allowedRoles={['admin']}>
+    {children}
+  </ProtectedRoute>
+);
 
 function App() {
   return (
@@ -37,9 +46,19 @@ function App() {
           <Route path="/" element={<HomeDefault />} />
           <Route path="/login" element={<Navigate to="/login/student" replace />} />
           <Route path="/login/:role" element={<RoleLogin />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route
+            path="/change-password"
+            element={
+              <ProtectedRoute allowedRoles={['admin', 'registrar', 'teacher', 'faculty', 'student']}>
+                <ChangePassword />
+              </ProtectedRoute>
+            }
+          />
 
           {/* Admin Dashboard */}
-          <Route path="/admin" element={<Dashboard />} />
+          <Route path="/admin" element={<AdminRoute><Dashboard /></AdminRoute>} />
 
           {/* Faculty */}
           <Route
@@ -86,30 +105,30 @@ function App() {
           />
 
           {/* User routes */}
-          <Route path="/admin/users" element={<UserList />} />
-          <Route path="/admin/users/create" element={<UserCreate />} />
-          <Route path="/admin/users/edit/:id" element={<UserEdit />} />
+          <Route path="/admin/users" element={<AdminRoute><UserList /></AdminRoute>} />
+          <Route path="/admin/users/create" element={<AdminRoute><UserCreate /></AdminRoute>} />
+          <Route path="/admin/users/edit/:id" element={<AdminRoute><UserEdit /></AdminRoute>} />
 
           {/* Admin Students */}
-          <Route path="/admin/students" element={<StudentList />} />
-          <Route path="/admin/students/create" element={<StudentCreate />} />
-          <Route path="/admin/students/edit/:id" element={<StudentEdit />} />
-          <Route path="/admin/students/:id" element={<StudentView />} />
+          <Route path="/admin/students" element={<AdminRoute><StudentList /></AdminRoute>} />
+          <Route path="/admin/students/create" element={<AdminRoute><StudentCreate /></AdminRoute>} />
+          <Route path="/admin/students/edit/:id" element={<AdminRoute><StudentEdit /></AdminRoute>} />
+          <Route path="/admin/students/:id" element={<AdminRoute><StudentView /></AdminRoute>} />
 
           {/* Admin Enrollments */}
-          <Route path="/admin/enrollments" element={<EnrollmentList />} />
-          <Route path="/admin/enrollments/create" element={<EnrollmentCreate />} />
-          <Route path="/admin/enrollments/edit/:id" element={<EnrollmentEdit />} />
-          <Route path="/admin/enrollments/:id" element={<EnrollmentView />} />
+          <Route path="/admin/enrollments" element={<AdminRoute><EnrollmentList /></AdminRoute>} />
+          <Route path="/admin/enrollments/create" element={<AdminRoute><EnrollmentCreate /></AdminRoute>} />
+          <Route path="/admin/enrollments/edit/:id" element={<AdminRoute><EnrollmentEdit /></AdminRoute>} />
+          <Route path="/admin/enrollments/:id" element={<AdminRoute><EnrollmentView /></AdminRoute>} />
 
           {/* Admin Faculty */}
-          <Route path="/admin/faculty" element={<FacultyList />} />
-          <Route path="/admin/faculty/create" element={<FacultyCreate />} />
-          <Route path="/admin/faculty/edit/:id" element={<FacultyEdit />} />
-          <Route path="/admin/faculty/:id" element={<FacultyView />} />
+          <Route path="/admin/faculty" element={<AdminRoute><FacultyList /></AdminRoute>} />
+          <Route path="/admin/faculty/create" element={<AdminRoute><FacultyCreate /></AdminRoute>} />
+          <Route path="/admin/faculty/edit/:id" element={<AdminRoute><FacultyEdit /></AdminRoute>} />
+          <Route path="/admin/faculty/:id" element={<AdminRoute><FacultyView /></AdminRoute>} />
 
           {/* Admin Semesters */}
-          <Route path="/admin/semesters" element={<SemesterList />} />
+          <Route path="/admin/semesters" element={<AdminRoute><SemesterList /></AdminRoute>} />
 
           {/* Optional legacy support */}
           <Route path="/enrollments" element={<Navigate to="/admin/enrollments" replace />} />
