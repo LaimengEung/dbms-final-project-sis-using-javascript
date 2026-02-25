@@ -68,6 +68,25 @@ const EnrollmentList = () => {
     fetchEnrollments();
   };
 
+  const handleStatusChange = async (enrollmentId, status) => {
+    try {
+      await enrollmentService.updateStatus(enrollmentId, status);
+      fetchEnrollments();
+    } catch (error) {
+      alert(error.message || 'Failed to update enrollment status');
+    }
+  };
+
+  const handleDelete = async (enrollmentId) => {
+    if (!window.confirm('Drop this enrollment?')) return;
+    try {
+      await enrollmentService.delete(enrollmentId);
+      fetchEnrollments();
+    } catch (error) {
+      alert(error.message || 'Failed to drop enrollment');
+    }
+  };
+
   return (
     <div className="space-y-6 p-6">
       <div className="flex justify-between items-center">
@@ -98,6 +117,8 @@ const EnrollmentList = () => {
             enrollments={enrollments}
             onView={(id) => navigate(`/admin/enrollments/${id}`)}
             onEdit={(id) => navigate(`/admin/enrollments/edit/${id}`)}
+            onDelete={handleDelete}
+            onStatusChange={handleStatusChange}
           />
           
           {pagination.totalPages > 1 && (

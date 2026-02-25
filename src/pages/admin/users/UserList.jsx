@@ -27,6 +27,7 @@ const UserList = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [deleteDialog, setDeleteDialog] = useState({ open: false, userId: null, userName: '' })
   const navigate = useNavigate()
+  const resolveUserId = (row) => Number(row?.user_id ?? row?.id ?? 0)
 
   useEffect(() => {
     fetchUsers()
@@ -60,7 +61,11 @@ const UserList = () => {
         limit: 50
       })
       // Your API might return response.data or just the array
-      const usersData = response.data || response
+      const usersData = Array.isArray(response?.data)
+        ? response.data
+        : Array.isArray(response)
+          ? response
+          : []
       setUsers(usersData)
       setFilteredUsers(usersData)
     } catch (error) {
@@ -87,10 +92,16 @@ const UserList = () => {
   }
 
   const handleDelete = async (id) => {
+    const userId = Number(id)
+    if (!Number.isInteger(userId) || userId <= 0) {
+      alert('Invalid user ID. Please refresh the page and try again.')
+      return
+    }
+
     try {
-      await userService.delete(id)
-      // Remove from local state
-      setUsers(users.filter(user => Number(user.user_id) !== Number(id)))
+      await userService.delete(userId)
+      // Re-sync from API to avoid stale UI state.
+      await fetchUsers()
       setDeleteDialog({ open: false, userId: null, userName: '' })
       
       // Show success message
@@ -99,6 +110,9 @@ const UserList = () => {
       console.error('Delete failed:', error)
       
       let errorMessage = 'Failed to delete user.'
+      if (error.response?.status === 409) {
+        errorMessage = 'Cannot delete this user because it is linked to student/faculty/enrollment records.'
+      }
       if (error.response?.data?.message) {
         errorMessage = error.response.data.message
       }
@@ -137,7 +151,7 @@ const UserList = () => {
     { 
       key: 'id', 
       header: 'ID',
-      render: (_, row) => <span className="font-mono text-sm">#{row.user_id || row.id}</span>
+      render: (_, row) => <span className="font-mono text-sm">#{resolveUserId(row)}</span>
     },
     { 
       key: 'name', 
@@ -179,7 +193,7 @@ const UserList = () => {
       header: 'Actions',
       render: (_, row) => (
         <div className="flex space-x-2">
-          <Link to={`/admin/users/edit/${row.user_id || row.id}`}>
+          <Link to={`/admin/users/edit/${resolveUserId(row)}`}>
             <Button variant="outline" size="sm" className="flex items-center">
               <Edit size={14} className="mr-1" />
               Edit
@@ -191,7 +205,7 @@ const UserList = () => {
             color="red"
             onClick={() => setDeleteDialog({ 
               open: true, 
-              userId: row.user_id || row.id, 
+              userId: resolveUserId(row), 
               userName: `${row.first_name} ${row.last_name}` 
             })}
             className="flex items-center"

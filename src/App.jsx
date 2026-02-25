@@ -20,9 +20,13 @@ import FacultyList from './pages/admin/faculty/FacultyList';
 import FacultyCreate from './pages/admin/faculty/FacultyCreate';
 import FacultyEdit from './pages/admin/faculty/FacultyEdit';
 import FacultyView from './pages/admin/faculty/FacultyView';
+import SemesterList from './pages/admin/semesters/SemesterList';
 import DashboardFaculty from './pages/faculty/dashboard/DashboardFaculty';
 import MyCourses from './pages/faculty/myCourses/MyCourses';
 import MySchedule from './pages/faculty/mySchedule/MySchedule';
+import DashboardStudent from './pages/student/dashboard/DashboardStudent';
+import RoleLogin from './pages/auth/RoleLogin';
+import ProtectedRoute from './components/auth/ProtectedRoute';
 import GradeManagement from './pages/faculty/gradeManagement/GradeManagement';
 import StudentRequests from './pages/faculty/studentRequests/StudentRequests';
 import ViewStudentsPanel from './pages/faculty/dashboard/components/ViewStudentsPanel';
@@ -36,11 +40,55 @@ function App() {
         <Routes>
           {/* Root */}
           <Route path="/" element={<HomeDefault />} />
+          <Route path="/login" element={<Navigate to="/login/student" replace />} />
+          <Route path="/login/:role" element={<RoleLogin />} />
 
           {/* Admin Dashboard */}
           <Route path="/admin" element={<Dashboard />} />
 
           {/* Faculty */}
+          <Route
+            path="/faculty"
+            element={
+              <ProtectedRoute allowedRoles={['teacher', 'faculty']}>
+                <DashboardFaculty />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/faculty/myCourses"
+            element={
+              <ProtectedRoute allowedRoles={['teacher', 'faculty']}>
+                <MyCourses />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/faculty/mySchedule"
+            element={
+              <ProtectedRoute allowedRoles={['teacher', 'faculty']}>
+                <MySchedule />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Student */}
+          <Route
+            path="/student"
+            element={
+              <ProtectedRoute allowedRoles={['student']}>
+                <DashboardStudent />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/registrar"
+            element={
+              <ProtectedRoute allowedRoles={['registrar']}>
+                <Navigate to="/" replace />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/faculty" element={<DashboardFaculty />} />
           <Route path="/faculty/courses/:courseId/students" element={<ViewStudentsPanel />} />
           <Route path="/faculty/courses/:courseId/grades" element={<ManageGradePanel />} />
@@ -72,8 +120,12 @@ function App() {
           <Route path="/admin/faculty/edit/:id" element={<FacultyEdit />} />
           <Route path="/admin/faculty/:id" element={<FacultyView />} />
 
+          {/* Admin Semesters */}
+          <Route path="/admin/semesters" element={<SemesterList />} />
+
           {/* Optional legacy support */}
           <Route path="/enrollments" element={<Navigate to="/admin/enrollments" replace />} />
+          <Route path="/admin/academics" element={<Navigate to="/admin/semesters" replace />} />
         </Routes>
       </Router>
     </ThemeProvider>

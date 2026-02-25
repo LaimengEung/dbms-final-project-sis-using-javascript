@@ -8,7 +8,7 @@ const adminMenu = [
   { icon: <Users />, label: 'Users', path: '/admin/users', badge: '3' },
   { icon: <User />, label: 'Students', path: '/admin/students', badge: '12' },
   { icon: <BookCheck />, label: 'Faculty', path: '/admin/faculty' },
-  { icon: <LayoutGrid />, label: 'Academics', path: '/admin/academics' },
+  { icon: <LayoutGrid />, label: 'Semesters', path: '/admin/semesters' },
   { icon: <Clipboard />, label: 'Enrollments', path: '/admin/enrollments' },
   { icon: <FileText />, label: 'Grades', path: '/admin/grades' },
   { icon: <DollarSign />, label: 'Finance', path: '/admin/finance' },
