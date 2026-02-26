@@ -1,0 +1,847 @@
+openapi: 3.0.3
+info:
+  title: DBMS Backend API
+  version: 1.0.0
+  description: Complete API reference for Back-End-System routes.
+servers:
+  - url: http://localhost:5001
+tags:
+  - name: Health
+  - name: Auth
+  - name: Departments
+  - name: Users
+  - name: Students
+  - name: Faculty
+  - name: Courses
+  - name: Sections
+  - name: Semesters
+  - name: Enrollments
+  - name: Majors
+  - name: Grades
+  - name: PreRegistrations
+  - name: DegreeRequirements
+  - name: Finance
+paths:
+  /:
+    get:
+      tags: [Health]
+      summary: Root endpoint
+      responses:
+        '200': { $ref: '#/components/responses/Ok' }
+
+  /health:
+    get:
+      tags: [Health]
+      summary: Health check
+      responses:
+        '200': { $ref: '#/components/responses/Ok' }
+
+  /api/auth/login:
+    post:
+      tags: [Auth]
+      summary: Login with email and password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AnyObject' }
+      responses:
+        '200': { $ref: '#/components/responses/AnyObject' }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+
+  /api/departments:
+    get:
+      tags: [Departments]
+      summary: List departments
+      responses:
+        '200': { $ref: '#/components/responses/AnyArray' }
+
+  /api/users:
+    get:
+      tags: [Users]
+      summary: List users
+      parameters:
+        - $ref: '#/components/parameters/search'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+      responses:
+        '200': { $ref: '#/components/responses/AnyArray' }
+    post:
+      tags: [Users]
+      summary: Create user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AnyObject' }
+      responses:
+        '201': { $ref: '#/components/responses/AnyObject' }
+        '400': { $ref: '#/components/responses/Error' }
+        '409': { $ref: '#/components/responses/Error' }
+
+  /api/users/stats:
+    get:
+      tags: [Users]
+      summary: User stats
+      responses:
+        '200': { $ref: '#/components/responses/AnyObject' }
+
+  /api/users/{id}:
+    get:
+      tags: [Users]
+      summary: Get user by id
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      responses:
+        '200': { $ref: '#/components/responses/AnyObject' }
+        '404': { $ref: '#/components/responses/Error' }
+    put:
+      tags: [Users]
+      summary: Update user
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AnyObject' }
+      responses:
+        '200': { $ref: '#/components/responses/AnyObject' }
+        '400': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+    patch:
+      tags: [Users]
+      summary: Patch user
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AnyObject' }
+      responses:
+        '200': { $ref: '#/components/responses/AnyObject' }
+        '404': { $ref: '#/components/responses/Error' }
+    delete:
+      tags: [Users]
+      summary: Delete user
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      responses:
+        '200': { $ref: '#/components/responses/Message' }
+        '404': { $ref: '#/components/responses/Error' }
+        '409': { $ref: '#/components/responses/Error' }
+
+  /api/students:
+    get:
+      tags: [Students]
+      summary: List students
+      parameters:
+        - $ref: '#/components/parameters/search'
+        - $ref: '#/components/parameters/limit'
+      responses:
+        '200': { $ref: '#/components/responses/AnyArray' }
+    post:
+      tags: [Students]
+      summary: Create student
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AnyObject' }
+      responses:
+        '201': { $ref: '#/components/responses/AnyObject' }
+        '400': { $ref: '#/components/responses/Error' }
+        '409': { $ref: '#/components/responses/Error' }
+
+  /api/students/{id}:
+    get:
+      tags: [Students]
+      summary: Get student by id
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      responses:
+        '200': { $ref: '#/components/responses/AnyObject' }
+        '404': { $ref: '#/components/responses/Error' }
+    put:
+      tags: [Students]
+      summary: Update student
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AnyObject' }
+      responses:
+        '200': { $ref: '#/components/responses/AnyObject' }
+        '404': { $ref: '#/components/responses/Error' }
+    delete:
+      tags: [Students]
+      summary: Delete student
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      responses:
+        '200': { $ref: '#/components/responses/Message' }
+        '404': { $ref: '#/components/responses/Error' }
+        '409': { $ref: '#/components/responses/Error' }
+
+  /api/students/{id}/enrollments:
+    get:
+      tags: [Students]
+      summary: List enrollments for one student
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      responses:
+        '200': { $ref: '#/components/responses/AnyArray' }
+
+  /api/faculty:
+    get:
+      tags: [Faculty]
+      summary: List faculty
+      responses:
+        '200': { $ref: '#/components/responses/AnyArray' }
+    post:
+      tags: [Faculty]
+      summary: Create faculty
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AnyObject' }
+      responses:
+        '201': { $ref: '#/components/responses/AnyObject' }
+        '400': { $ref: '#/components/responses/Error' }
+        '409': { $ref: '#/components/responses/Error' }
+
+  /api/faculty/{id}:
+    get:
+      tags: [Faculty]
+      summary: Get faculty by id
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      responses:
+        '200': { $ref: '#/components/responses/AnyObject' }
+        '404': { $ref: '#/components/responses/Error' }
+    put:
+      tags: [Faculty]
+      summary: Update faculty
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AnyObject' }
+      responses:
+        '200': { $ref: '#/components/responses/AnyObject' }
+        '404': { $ref: '#/components/responses/Error' }
+    delete:
+      tags: [Faculty]
+      summary: Delete faculty
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      responses:
+        '200': { $ref: '#/components/responses/Message' }
+        '404': { $ref: '#/components/responses/Error' }
+
+  /api/courses:
+    get:
+      tags: [Courses]
+      summary: List courses
+      parameters:
+        - $ref: '#/components/parameters/search'
+        - $ref: '#/components/parameters/limit'
+      responses:
+        '200': { $ref: '#/components/responses/AnyArray' }
+    post:
+      tags: [Courses]
+      summary: Create course
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AnyObject' }
+      responses:
+        '201': { $ref: '#/components/responses/AnyObject' }
+        '400': { $ref: '#/components/responses/Error' }
+
+  /api/courses/{id}:
+    get:
+      tags: [Courses]
+      summary: Get course by id
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      responses:
+        '200': { $ref: '#/components/responses/AnyObject' }
+        '404': { $ref: '#/components/responses/Error' }
+    put:
+      tags: [Courses]
+      summary: Update course
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AnyObject' }
+      responses:
+        '200': { $ref: '#/components/responses/AnyObject' }
+        '404': { $ref: '#/components/responses/Error' }
+    delete:
+      tags: [Courses]
+      summary: Delete course
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      responses:
+        '200': { $ref: '#/components/responses/Message' }
+        '404': { $ref: '#/components/responses/Error' }
+
+  /api/courses/{id}/sections:
+    get:
+      tags: [Courses]
+      summary: List course sections
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      responses:
+        '200': { $ref: '#/components/responses/AnyArray' }
+    post:
+      tags: [Courses]
+      summary: Create course section
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AnyObject' }
+      responses:
+        '201': { $ref: '#/components/responses/AnyObject' }
+        '400': { $ref: '#/components/responses/Error' }
+
+  /api/courses/{id}/prerequisites:
+    get:
+      tags: [Courses]
+      summary: List prerequisites for a course
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      responses:
+        '200': { $ref: '#/components/responses/AnyArray' }
+
+  /api/class-sections:
+    get:
+      tags: [Sections]
+      summary: List class sections
+      parameters:
+        - $ref: '#/components/parameters/semester_id'
+        - $ref: '#/components/parameters/status'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/course_id'
+      responses:
+        '200': { $ref: '#/components/responses/AnyArray' }
+
+  /api/sections/available:
+    get:
+      tags: [Sections]
+      summary: List available sections
+      parameters:
+        - $ref: '#/components/parameters/semester_id'
+        - $ref: '#/components/parameters/status'
+        - $ref: '#/components/parameters/limit'
+      responses:
+        '200': { $ref: '#/components/responses/AnyArray' }
+
+  /api/sections/{id}:
+    get:
+      tags: [Sections]
+      summary: Get section by id
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      responses:
+        '200': { $ref: '#/components/responses/AnyObject' }
+        '404': { $ref: '#/components/responses/Error' }
+
+  /api/sections/{id}/capacity:
+    get:
+      tags: [Sections]
+      summary: Get section capacity
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      responses:
+        '200': { $ref: '#/components/responses/AnyObject' }
+        '404': { $ref: '#/components/responses/Error' }
+
+  /api/semesters:
+    get:
+      tags: [Semesters]
+      summary: List semesters
+      responses:
+        '200': { $ref: '#/components/responses/AnyArray' }
+    post:
+      tags: [Semesters]
+      summary: Create semester
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AnyObject' }
+      responses:
+        '201': { $ref: '#/components/responses/AnyObject' }
+        '400': { $ref: '#/components/responses/Error' }
+
+  /api/semesters/{id}:
+    put:
+      tags: [Semesters]
+      summary: Update semester
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AnyObject' }
+      responses:
+        '200': { $ref: '#/components/responses/AnyObject' }
+        '404': { $ref: '#/components/responses/Error' }
+
+  /api/semesters/{id}/current:
+    patch:
+      tags: [Semesters]
+      summary: Set current semester
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      responses:
+        '200': { $ref: '#/components/responses/AnyObject' }
+        '404': { $ref: '#/components/responses/Error' }
+
+  /api/enrollments:
+    get:
+      tags: [Enrollments]
+      summary: List enrollments
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/search'
+        - $ref: '#/components/parameters/status'
+        - $ref: '#/components/parameters/semester_id'
+        - $ref: '#/components/parameters/section_id'
+      responses:
+        '200': { $ref: '#/components/responses/AnyObject' }
+    post:
+      tags: [Enrollments]
+      summary: Create enrollment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AnyObject' }
+      responses:
+        '201': { $ref: '#/components/responses/AnyObject' }
+        '400': { $ref: '#/components/responses/Error' }
+        '409': { $ref: '#/components/responses/Error' }
+
+  /api/enrollments/available-sections:
+    get:
+      tags: [Enrollments]
+      summary: Available sections for enrollment
+      parameters:
+        - $ref: '#/components/parameters/semester_id'
+        - $ref: '#/components/parameters/status'
+        - $ref: '#/components/parameters/limit'
+      responses:
+        '200': { $ref: '#/components/responses/AnyArray' }
+
+  /api/enrollments/bulk:
+    post:
+      tags: [Enrollments]
+      summary: Bulk create enrollments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AnyObject' }
+      responses:
+        '200': { $ref: '#/components/responses/AnyObject' }
+
+  /api/enrollments/{id}:
+    get:
+      tags: [Enrollments]
+      summary: Get enrollment by id
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      responses:
+        '200': { $ref: '#/components/responses/AnyObject' }
+        '404': { $ref: '#/components/responses/Error' }
+    put:
+      tags: [Enrollments]
+      summary: Update enrollment
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AnyObject' }
+      responses:
+        '200': { $ref: '#/components/responses/AnyObject' }
+        '404': { $ref: '#/components/responses/Error' }
+        '409': { $ref: '#/components/responses/Error' }
+    delete:
+      tags: [Enrollments]
+      summary: Delete enrollment
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      responses:
+        '200': { $ref: '#/components/responses/Message' }
+        '404': { $ref: '#/components/responses/Error' }
+
+  /api/enrollments/{id}/status:
+    patch:
+      tags: [Enrollments]
+      summary: Update enrollment status
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AnyObject' }
+      responses:
+        '200': { $ref: '#/components/responses/AnyObject' }
+        '400': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+
+  /api/majors:
+    get:
+      tags: [Majors]
+      summary: List majors
+      responses:
+        '200': { $ref: '#/components/responses/AnyArray' }
+    post:
+      tags: [Majors]
+      summary: Create major
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AnyObject' }
+      responses:
+        '201': { $ref: '#/components/responses/AnyObject' }
+
+  /api/majors/{id}:
+    get:
+      tags: [Majors]
+      summary: Get major by id
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      responses:
+        '200': { $ref: '#/components/responses/AnyObject' }
+        '404': { $ref: '#/components/responses/Error' }
+    put:
+      tags: [Majors]
+      summary: Update major
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AnyObject' }
+      responses:
+        '200': { $ref: '#/components/responses/AnyObject' }
+        '404': { $ref: '#/components/responses/Error' }
+    delete:
+      tags: [Majors]
+      summary: Delete major
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      responses:
+        '200': { $ref: '#/components/responses/Message' }
+        '404': { $ref: '#/components/responses/Error' }
+
+  /api/grades:
+    get:
+      tags: [Grades]
+      summary: List grades
+      parameters:
+        - $ref: '#/components/parameters/student_id'
+        - $ref: '#/components/parameters/enrollment_id'
+        - $ref: '#/components/parameters/semester_id'
+      responses:
+        '200': { $ref: '#/components/responses/AnyArray' }
+    post:
+      tags: [Grades]
+      summary: Create grade
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AnyObject' }
+      responses:
+        '201': { $ref: '#/components/responses/AnyObject' }
+
+  /api/grades/{id}:
+    get:
+      tags: [Grades]
+      summary: Get grade by id
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      responses:
+        '200': { $ref: '#/components/responses/AnyObject' }
+        '404': { $ref: '#/components/responses/Error' }
+    put:
+      tags: [Grades]
+      summary: Update grade
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AnyObject' }
+      responses:
+        '200': { $ref: '#/components/responses/AnyObject' }
+        '404': { $ref: '#/components/responses/Error' }
+    delete:
+      tags: [Grades]
+      summary: Delete grade
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      responses:
+        '200': { $ref: '#/components/responses/Message' }
+        '404': { $ref: '#/components/responses/Error' }
+
+  /api/pre-registrations:
+    get:
+      tags: [PreRegistrations]
+      summary: List pre-registrations
+      parameters:
+        - $ref: '#/components/parameters/student_id'
+        - $ref: '#/components/parameters/semester_id'
+        - $ref: '#/components/parameters/status'
+      responses:
+        '200': { $ref: '#/components/responses/AnyArray' }
+    post:
+      tags: [PreRegistrations]
+      summary: Create pre-registration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AnyObject' }
+      responses:
+        '201': { $ref: '#/components/responses/AnyObject' }
+
+  /api/pre-registrations/{id}:
+    get:
+      tags: [PreRegistrations]
+      summary: Get pre-registration by id
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      responses:
+        '200': { $ref: '#/components/responses/AnyObject' }
+        '404': { $ref: '#/components/responses/Error' }
+    put:
+      tags: [PreRegistrations]
+      summary: Update pre-registration
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AnyObject' }
+      responses:
+        '200': { $ref: '#/components/responses/AnyObject' }
+        '404': { $ref: '#/components/responses/Error' }
+    delete:
+      tags: [PreRegistrations]
+      summary: Delete pre-registration
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      responses:
+        '200': { $ref: '#/components/responses/Message' }
+        '404': { $ref: '#/components/responses/Error' }
+
+  /api/degree-requirements:
+    get:
+      tags: [DegreeRequirements]
+      summary: List degree requirements
+      parameters:
+        - $ref: '#/components/parameters/major_id'
+      responses:
+        '200': { $ref: '#/components/responses/AnyArray' }
+    post:
+      tags: [DegreeRequirements]
+      summary: Create degree requirement
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AnyObject' }
+      responses:
+        '201': { $ref: '#/components/responses/AnyObject' }
+
+  /api/degree-requirements/{id}:
+    get:
+      tags: [DegreeRequirements]
+      summary: Get degree requirement by id
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      responses:
+        '200': { $ref: '#/components/responses/AnyObject' }
+        '404': { $ref: '#/components/responses/Error' }
+    put:
+      tags: [DegreeRequirements]
+      summary: Update degree requirement
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AnyObject' }
+      responses:
+        '200': { $ref: '#/components/responses/AnyObject' }
+        '404': { $ref: '#/components/responses/Error' }
+    delete:
+      tags: [DegreeRequirements]
+      summary: Delete degree requirement
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      responses:
+        '200': { $ref: '#/components/responses/Message' }
+        '404': { $ref: '#/components/responses/Error' }
+
+  /api/finance-records:
+    get:
+      tags: [Finance]
+      summary: List finance records
+      parameters:
+        - $ref: '#/components/parameters/student_id'
+        - $ref: '#/components/parameters/semester_id'
+        - $ref: '#/components/parameters/status'
+        - $ref: '#/components/parameters/transaction_type'
+      responses:
+        '200': { $ref: '#/components/responses/AnyArray' }
+    post:
+      tags: [Finance]
+      summary: Create finance record
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AnyObject' }
+      responses:
+        '201': { $ref: '#/components/responses/AnyObject' }
+
+  /api/finance-records/{id}:
+    get:
+      tags: [Finance]
+      summary: Get finance record by id
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      responses:
+        '200': { $ref: '#/components/responses/AnyObject' }
+        '404': { $ref: '#/components/responses/Error' }
+    put:
+      tags: [Finance]
+      summary: Update finance record
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AnyObject' }
+      responses:
+        '200': { $ref: '#/components/responses/AnyObject' }
+        '404': { $ref: '#/components/responses/Error' }
+    delete:
+      tags: [Finance]
+      summary: Delete finance record
+      parameters: [ { $ref: '#/components/parameters/id' } ]
+      responses:
+        '200': { $ref: '#/components/responses/Message' }
+        '404': { $ref: '#/components/responses/Error' }
+
+components:
+  parameters:
+    id:
+      name: id
+      in: path
+      required: true
+      schema: { type: integer }
+    page:
+      name: page
+      in: query
+      required: false
+      schema: { type: integer, minimum: 1, default: 1 }
+    limit:
+      name: limit
+      in: query
+      required: false
+      schema: { type: integer, minimum: 1, default: 10 }
+    search:
+      name: search
+      in: query
+      required: false
+      schema: { type: string }
+    status:
+      name: status
+      in: query
+      required: false
+      schema: { type: string }
+    semester_id:
+      name: semester_id
+      in: query
+      required: false
+      schema: { type: integer }
+    section_id:
+      name: section_id
+      in: query
+      required: false
+      schema: { type: integer }
+    student_id:
+      name: student_id
+      in: query
+      required: false
+      schema: { type: integer }
+    enrollment_id:
+      name: enrollment_id
+      in: query
+      required: false
+      schema: { type: integer }
+    major_id:
+      name: major_id
+      in: query
+      required: false
+      schema: { type: integer }
+    course_id:
+      name: course_id
+      in: query
+      required: false
+      schema: { type: integer }
+    transaction_type:
+      name: transaction_type
+      in: query
+      required: false
+      schema: { type: string }
+
+  schemas:
+    Message:
+      type: object
+      properties:
+        message:
+          type: string
+      required: [message]
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        detail:
+          type: string
+      required: [message]
+    AnyObject:
+      type: object
+      additionalProperties: true
+    AnyArray:
+      type: array
+      items:
+        $ref: '#/components/schemas/AnyObject'
+
+  responses:
+    Ok:
+      description: Success
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AnyObject'
+    Message:
+      description: Message response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Message'
+    Error:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    AnyObject:
+      description: JSON object response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AnyObject'
+    AnyArray:
+      description: JSON array response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AnyArray'
