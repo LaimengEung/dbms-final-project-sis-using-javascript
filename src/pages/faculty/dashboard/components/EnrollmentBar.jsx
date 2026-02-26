@@ -7,7 +7,7 @@ const EnrollmentBar = ({ enrolled, capacity }) => {
       {/* Title and Capacity */}
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
         <span style={{ fontSize: "13px", color: "#6b7280", fontFamily: "'DM Sans', sans-serif" }}>Enrollment</span>
-        <span style={{ fontSize: "13px", color: "#111827", fontWeight: 600, fontFamily: "'DM Sans', sans-serif" }}>
+        <span style={{ fontSize: "13px", color: "#111827", fontWeight: 500, fontFamily: "'DM Sans', sans-serif" }}>
           {enrolled}/{capacity}
         </span>
       </div>

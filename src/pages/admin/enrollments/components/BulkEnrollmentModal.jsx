@@ -8,6 +8,10 @@ const BulkEnrollmentModal = ({ isOpen, onClose, onSuccess, semesters }) => {
   const [semesterId, setSemesterId] = useState('');
   const [enrollments, setEnrollments] = useState([]);
   const [loading, setLoading] = useState(false);
+  const semesterOptions = semesters.map((s) => ({
+    value: String(s.semester_id),
+    label: `${s.semester_name} ${s.semester_year}`,
+  }));
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
@@ -51,14 +55,12 @@ const BulkEnrollmentModal = ({ isOpen, onClose, onSuccess, semesters }) => {
           <div className="space-y-6">
             <div>
               <label className="block text-sm font-medium mb-1">Semester *</label>
-              <Select value={semesterId} onChange={(e) => setSemesterId(e.target.value)}>
-                <option value="">Select semester...</option>
-                {semesters.map(s => (
-                  <option key={s.semester_id} value={s.semester_id}>
-                    {s.semester_name} {s.semester_year}
-                  </option>
-                ))}
-              </Select>
+              <Select
+                value={semesterId}
+                onChange={(e) => setSemesterId(e.target.value)}
+                placeholder="Select semester..."
+                options={semesterOptions}
+              />
             </div>
 
             <div>

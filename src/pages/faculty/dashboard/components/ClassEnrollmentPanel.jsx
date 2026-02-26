@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import ClassEnrollCard from "./ClassEnrollCard";
 
 const defaultCourses = [
@@ -34,47 +35,72 @@ const defaultCourses = [
 ];
 
 const ClassEnrollmentPanel = ({ courses = defaultCourses }) => {
-  const handleViewStudents = (course) => alert(`Viewing students for ${course.code}`);
-  const handleManageGrades = (course) => alert(`Managing grades for ${course.code}`);
+  const navigate = useNavigate();
+
+  const handleViewStudents = (course) => {
+    navigate(`/faculty/courses/${course.id}/students`);
+  };
+  
+  const handleManageGrades = (course) =>
+    navigate(`/faculty/courses/${course.id}/grades`);
 
   return (
     <>
-      {/* <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');`}</style> */}
-      <div 
-        style={{ 
-          fontFamily: "'DM Sans', sans-serif", 
-          padding: "32px", 
-          background: "#fff", 
-          borderRadius: "14px", 
+      <div
+        style={{
+          fontFamily: "'DM Sans', sans-serif",
+          padding: "32px",
+          background: "#fff",
+          borderRadius: "14px",
         }}
       >
-        <div 
-          style={{ 
-            display: "flex", 
-            justifyContent: "space-between", 
-            alignItems: "center", 
-            marginBottom: "24px" 
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "24px",
           }}
         >
-          <h2 style={{ margin: 0, fontSize: "20px", fontWeight: 500, color: "#111827" }}>
+          <h2
+            style={{
+              margin: 0,
+              fontSize: "20px",
+              fontWeight: 500,
+              color: "#111827",
+            }}
+          >
             My Courses This Semester
           </h2>
           <a
             href="#"
-            style={{ color: "#3b5bff", fontSize: "14px", fontWeight: 500, textDecoration: "none" }}
-            onMouseEnter={e => (e.currentTarget.style.textDecoration = "underline")}
-            onMouseLeave={e => (e.currentTarget.style.textDecoration = "none")}
+            onClick={(e) => {
+              e.preventDefault();
+              navigate("/faculty/myCourses");
+            }}
+            style={{
+              color: "#3b5bff",
+              fontSize: "14px",
+              fontWeight: 500,
+              textDecoration: "none",
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.textDecoration = "underline")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.textDecoration = "none")
+            }
           >
             View All Courses
           </a>
-        </div>
+        </div> 
 
-        <div 
-          style={{ 
-            display: "flex", 
+        <div
+          style={{
+            display: "flex",
             justifyContent: "space-between",
-            gridTemplateColumns: "repeat(3, 1fr)", 
-            gap: "18px" 
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: "18px",
           }}
         >
           {courses.map((course) => (
@@ -89,6 +115,6 @@ const ClassEnrollmentPanel = ({ courses = defaultCourses }) => {
       </div>
     </>
   );
-}
+};
 
 export default ClassEnrollmentPanel;
