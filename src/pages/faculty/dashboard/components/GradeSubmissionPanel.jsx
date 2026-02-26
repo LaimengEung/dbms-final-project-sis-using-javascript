@@ -1,14 +1,16 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 import { CircleAlert, CircleCheckBig } from "lucide-react"
 
-const GradeSubmissionPanel = ({ reminders, onPostGrades }) => {
+const GradeSubmissionPanel = ({reminders, onPostGrades }) => {
   const defaultReminders = [
     { course: "CS 301", label: "Final Grades",   dueIn: 3 },
     { course: "CS 450", label: "Midterm Grades",  dueIn: 5 },
     { course: "CS 490", label: "Project Grades",  dueIn: 7 },
   ];
 
+  const navigate = useNavigate();
   const items = reminders ?? defaultReminders;
   const hasPending = items.length > 0;
 
@@ -39,8 +41,6 @@ const GradeSubmissionPanel = ({ reminders, onPostGrades }) => {
 
   return (
     <>
-      {/* <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');`}</style> */}
-
       <div
         style={{
           backgroundColor: theme.cardBg,
@@ -49,8 +49,11 @@ const GradeSubmissionPanel = ({ reminders, onPostGrades }) => {
           padding: "24px",
           fontFamily: "'DM Sans', sans-serif",
           minWidth: "320px",
-          maxWidth: "520px",
+          height: "100%",
+          boxSizing: "border-box",
           transition: "background-color 0.3s ease, border-color 0.3s ease",
+          display: "flex",         
+          flexDirection: "column",
         }}
       >
         {/* Header */}
@@ -92,35 +95,21 @@ const GradeSubmissionPanel = ({ reminders, onPostGrades }) => {
               ))}
             </div>
 
-            <button
-              style={{
-                ...styles.postButton,
-                backgroundColor: theme.buttonBg,
-                color: theme.buttonColor,
-              }}
-              onClick={onPostGrades}
-            >
-              Post Grades
-            </button>
+            <div style={{ marginTop: "auto" }}>
+              <button 
+                style={{ ...styles.postButton, backgroundColor: theme.buttonBg, color: theme.buttonColor }} 
+                onClick={() => navigate(onPostGrades)}
+              >
+                Post Grades
+              </button>
+            </div>
           </>
         )}
 
         {/* Empty state */}
         {!hasPending && (
           <div style={styles.emptyState}>
-            <svg
-              width="40"
-              height="40"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#d1d5db"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-              <polyline points="22 4 12 14.01 9 11.01" />
-            </svg>
+            <CircleCheckBig width="40" height="40" stroke="#d1d5db" />
             <p style={styles.emptyText}>You're all caught up!</p>
           </div>
         )}
@@ -170,7 +159,7 @@ const styles = {
     alignItems: "center",
   },
   reminderLabel: {
-    fontSize: "14px",
+    fontSize: "15px",
     fontWeight: "400",
     color: "#1a1a2e",
   },
@@ -185,7 +174,7 @@ const styles = {
     border: "none",
     borderRadius: "10px",
     fontSize: "15px",
-    fontWeight: "600",
+    fontWeight: "500",
     fontFamily: "'DM Sans', sans-serif",
     cursor: "pointer",
     letterSpacing: "0.01em",

@@ -12,19 +12,19 @@ function Home() {
 
       <br /><br />
 
-      <button style={{ backgroundColor: "blue", color: "white" }} onClick={() => navigate("/faculty")}>
+      <button style={{ backgroundColor: "blue", color: "white" }} onClick={() => navigate("/login/faculty")}>
         Faculty
       </button>
 
       <br /><br />
 
-      <button style={{ backgroundColor: "blue", color: "white" }} onClick={() => navigate("/registrar")}>
+      <button style={{ backgroundColor: "blue", color: "white" }} onClick={() => navigate("/login/registrar")}>
         Registrar
       </button>
 
       <br /><br />
 
-      <button style={{ backgroundColor: "blue", color: "white" }} onClick={() => navigate("/student")}>
+      <button style={{ backgroundColor: "blue", color: "white" }} onClick={() => navigate("/login/student")}>
         Student
       </button>
 

@@ -50,24 +50,9 @@ const StudentList = () => {
       setFilteredStudents(data)
     } catch (error) {
       console.error('Error fetching students:', error)
-      setError('Failed to load students. Using sample data.')
-      // Fallback data
-      const fallbackData = [
-        { 
-          student_id: 1, 
-          student_number: 'STU001', 
-          first_name: 'John', 
-          last_name: 'Doe', 
-          email: 'john@school.edu',
-          classification: 3,
-          major_name: 'Computer Science',
-          gpa: 3.8,
-          academic_standing: 'Good',
-          credits_earned: 90
-        }
-      ]
-      setStudents(fallbackData)
-      setFilteredStudents(fallbackData)
+      setError('Failed to load students. Please check if backend is running.')
+      setStudents([])
+      setFilteredStudents([])
     } finally {
       setLoading(false)
     }
@@ -106,7 +91,8 @@ const handleDelete = async () => {
     
   } catch (error) {
     console.error('❌ Delete failed:', error)
-    alert(`Delete failed: ${error.message || 'Unknown error'}`)
+    const message = error?.response?.data?.message || error.message || 'Unknown error'
+    alert(`Delete failed: ${message}`)
     setDeleteDialog({ open: false, studentId: null, studentName: '' })
     
     // Still refresh to sync with localStorage
@@ -401,13 +387,13 @@ const handleDelete = async () => {
 
         {/* Delete Confirmation Dialog */}
         <ConfirmDialog
-          open={deleteDialog.open}
+          isOpen={deleteDialog.open}
           title="Delete Student"
           message={`Are you sure you want to delete student "${deleteDialog.studentName}"? This action cannot be undone.`}
-          confirmLabel="Delete"
-          cancelLabel="Cancel"
+          confirmText="Delete"
+          cancelText="Cancel"
           onConfirm={handleDelete}
-          onCancel={() => setDeleteDialog({ open: false, studentId: null, studentName: '' })}
+          onClose={() => setDeleteDialog({ open: false, studentId: null, studentName: '' })}
           variant="danger"
         />
       </div>

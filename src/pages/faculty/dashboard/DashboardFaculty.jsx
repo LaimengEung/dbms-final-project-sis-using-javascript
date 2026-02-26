@@ -5,24 +5,38 @@ import FacultyLayout from "../../../components/layout/FacultyLayout";
 import ClassEnrollmentPanel from "./components/ClassEnrollmentPanel";
 import TodaySchedulePanel from "./components/TodaySchedulePanel";
 import GradeSubmissionPanel from "./components/GradeSubmissionPanel";
+import PendingApprovalPanel from "./components/PendingApprovalPanel";
 
+const ViewSchedulePath = "/faculty/mySchedule";
+const ManageGradesPath = "/faculty/gradeManagement"
+const ViewRequestsPath = "/faculty/studentRequests";
+
+const DashboardUserName = "James Sok";
+const DashboardUserGender = "M";
 const DashboardFaculty = () => {
   return (
     <FacultyLayout>
-      <div className="Welcome-Section" style={{ marginBottom: 20 }}>
-        <h1
-          className="Welcome-User"
-          style={{ fontSize: "20px", fontWeight: "500" }}
-        >
-          Welcome back
+      <div style={{ marginBottom: 20 }}>
+        <h1 style={{ fontSize: "20px", fontWeight: "500" }}>
+          Welcome back, {DashboardUserGender === "M" ? "Mr." : DashboardUserGender === "F" ? "Ms." : ""} {DashboardUserName}
         </h1>
-        <p classname="Welcome-Subtitle">
+        <p style={{ margin: "4px 0 0", fontSize: "13.5px", color: "#6b7280" }}>
           Here's what's happening with your courses and students
         </p>
       </div>
+
       <ClassEnrollmentPanel />
-      <TodaySchedulePanel />
-      <GradeSubmissionPanel />
+      <div style={{ display: "flex", gap: "24px", alignItems: "stretch", marginTop: "24px" }}>
+        <div style={{ flex: 1 }}>
+          <TodaySchedulePanel onViewSchedule={ViewSchedulePath} /> 
+        </div>
+        <div style={{ flex: 1 }}>
+          <GradeSubmissionPanel onPostGrades={ManageGradesPath}/>
+        </div>
+        <div style={{ flex: 1 }}>
+          <PendingApprovalPanel onViewRequests={ViewRequestsPath} />
+        </div>
+      </div>
     </FacultyLayout>
   );
 };

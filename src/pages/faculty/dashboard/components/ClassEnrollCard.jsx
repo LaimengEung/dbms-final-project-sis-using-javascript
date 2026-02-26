@@ -124,7 +124,7 @@ const ClassEnrollCard = ({ course, onViewStudents, onManageGrades }) => {
             color: "#fff",
             border: "none",
             borderRadius: "8px",
-            fontWeight: 600,
+            fontWeight: 500,
             fontSize: "13.5px",
             cursor: "pointer",
             fontFamily: "'DM Sans', sans-serif",

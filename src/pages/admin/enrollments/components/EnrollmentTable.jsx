@@ -2,7 +2,15 @@ import React from 'react';
 import { Table, Button } from '../../../../components/ui';
 import EnrollmentStatusBadge from './EnrollmentStatusBadge';
 
-const EnrollmentTable = ({ enrollments, onView, onEdit, onDelete, onStatusChange }) => {
+const noop = () => {};
+
+const EnrollmentTable = ({
+  enrollments,
+  onView = noop,
+  onEdit = noop,
+  onDelete = noop,
+  onStatusChange = noop,
+}) => {
   const columns = [
     {
       header: 'Student',
