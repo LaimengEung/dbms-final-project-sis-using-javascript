@@ -4,6 +4,7 @@ import { Button, Card, Input } from '../../components/ui';
 import authService from '../../services/authService';
 
 const ROLE_META = {
+  admin: { label: 'Admin', nextPath: '/admin', acceptedRoles: ['admin'] },
   student: { label: 'Student', nextPath: '/student', acceptedRoles: ['student'] },
   faculty: { label: 'Faculty', nextPath: '/faculty', acceptedRoles: ['teacher', 'faculty'] },
   registrar: { label: 'Registrar', nextPath: '/registrar', acceptedRoles: ['registrar'] },
@@ -32,7 +33,8 @@ const RoleLogin = () => {
     setLoading(true);
     try {
       const result = await authService.login({ email, password });
-      const user = result?.data;
+      const user = result?.data?.user;
+      const accessToken = result?.data?.access_token;
       const userRole = String(user?.role || '').toLowerCase();
 
       if (!roleConfig.acceptedRoles.includes(userRole)) {
@@ -40,7 +42,17 @@ const RoleLogin = () => {
         return;
       }
 
+      if (!accessToken) {
+        setError('Login failed: missing access token.');
+        return;
+      }
+
       localStorage.setItem('currentUser', JSON.stringify(user));
+      localStorage.setItem('accessToken', accessToken);
+      if (user?.must_change_password) {
+        navigate('/change-password');
+        return;
+      }
       navigate(roleConfig.nextPath);
     } catch (err) {
       const message = err?.response?.data?.message || 'Login failed. Please check your credentials.';
@@ -80,6 +92,11 @@ const RoleLogin = () => {
           <div className="text-sm text-gray-600 text-center">
             <Link to="/" className="text-blue-600 hover:underline">
               Back to role selection
+            </Link>
+          </div>
+          <div className="text-sm text-gray-600 text-center">
+            <Link to="/forgot-password" className="text-blue-600 hover:underline">
+              Forgot password?
             </Link>
           </div>
         </form>

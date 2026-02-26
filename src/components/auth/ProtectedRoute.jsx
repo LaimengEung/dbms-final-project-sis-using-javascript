@@ -7,6 +7,12 @@ const normalizeRole = (role) => {
   return value;
 };
 
+const toLoginRole = (role) => {
+  const normalized = normalizeRole(role);
+  if (normalized === 'teacher') return 'faculty';
+  return normalized || 'student';
+};
+
 const readCurrentUser = () => {
   try {
     const raw = localStorage.getItem('currentUser');
@@ -24,8 +30,12 @@ const ProtectedRoute = ({ allowedRoles = [], children }) => {
   const normalizedAllowedRoles = allowedRoles.map(normalizeRole);
 
   if (!user || !role) {
-    const loginRole = normalizedAllowedRoles[0] || 'student';
+    const loginRole = toLoginRole(normalizedAllowedRoles[0]);
     return <Navigate to={`/login/${loginRole}`} replace state={{ from: location.pathname }} />;
+  }
+
+  if (user?.must_change_password && location.pathname !== '/change-password') {
+    return <Navigate to="/change-password" replace />;
   }
 
   if (!normalizedAllowedRoles.includes(role)) {

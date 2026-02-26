@@ -1,256 +1,219 @@
-import { useState, useMemo } from "react";
-import GradeStatCard from "./components/GradeStatCard";
-import GradeTable from "./components/GradeTable";
-import SemesterDropdown from "../myCourses/components/SemesterDropdown";
-import FacultyLayout from "../../../components/layout/FacultyLayout";
-import { Award, Check, CircleAlert, TrendingUp } from "lucide-react";
+import React, { useEffect, useMemo, useState } from 'react';
+import FacultyLayout from '../../../components/layout/FacultyLayout';
+import { Alert, Button, Card, Input, Select, Spinner, Table } from '../../../components/ui';
+import enrollmentService from '../../../services/enrollmentService';
+import gradeService from '../../../services/gradeService';
 
-/* ── Default data ─────────────────────────────────────── */
-const defaultCourses = [
-  { id: 1, code: "CS 301", name: "Data Structures",    section: "Section 01", semester: "Spring 2025" },
-  { id: 2, code: "CS 450", name: "Advanced Algorithms", section: "Section 02", semester: "Spring 2025" },
-  { id: 3, code: "CS 490", name: "Senior Capstone",     section: "Section 01", semester: "Spring 2025" },
-];
-
-const defaultStudents = {
-  1: [
-    { id: 1, name: "James Wilson", studentId: "STU2024005", avatarUrl: null, grades: { midterm: 88, final: 84, assignments: 91, participation: 85 } },
-    { id: 2, name: "Lisa Park",    studentId: "STU2024006", avatarUrl: null, grades: { midterm: 76, final: 79, assignments: 82, participation: 80 } },
-    { id: 3, name: "David Kumar",  studentId: "STU2024007", avatarUrl: null, grades: { midterm: 95, final: 92, assignments: 97, participation: 90 } },
-    { id: 4, name: "Sara Chen",    studentId: "STU2024008", avatarUrl: null, grades: { midterm: 65, final: 68, assignments: 70, participation: 72 } },
-    { id: 5, name: "Mark Torres",  studentId: "STU2024009", avatarUrl: null, grades: { midterm: 82, final: 85, assignments: 78, participation: 88 } },
-  ],
-  2: [
-    { id: 6, name: "Amy Nguyen",   studentId: "STU2024010", avatarUrl: null, grades: { midterm: 91, final: 88, assignments: 93, participation: 87 } },
-    { id: 7, name: "Ben Carter",   studentId: "STU2024011", avatarUrl: null, grades: { midterm: 72, final: 75, assignments: 68, participation: 74 } },
-  ],
-  3: [
-    { id: 8, name: "Clara Reid",   studentId: "STU2024012", avatarUrl: null, grades: { midterm: 89, final: 91, assignments: 94, participation: 92 } },
-    { id: 9, name: "Oscar Lin",    studentId: "STU2024013", avatarUrl: null, grades: { midterm: 60, final: 63, assignments: 66, participation: 65 } },
-  ],
+const letterFromNumeric = (score) => {
+  const n = Number(score);
+  if (Number.isNaN(n)) return '';
+  if (n >= 90) return 'A';
+  if (n >= 80) return 'B';
+  if (n >= 70) return 'C';
+  if (n >= 60) return 'D';
+  return 'F';
 };
 
-/* ── Helpers ──────────────────────────────────────────── */
-const calcAverage = (g) =>
-  Math.round(g.midterm * 0.3 + g.final * 0.4 + g.assignments * 0.2 + g.participation * 0.1);
+const GradeManagement = () => {
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
+  const [enrollments, setEnrollments] = useState([]);
+  const [gradeMap, setGradeMap] = useState({});
+  const [sectionFilter, setSectionFilter] = useState('');
+  const [drafts, setDrafts] = useState({});
 
-const computeStats = (students) => {
-  if (!students.length) return { avg: "—", high: "—", low: "—", submitted: "—" };
-  const avgs = students.map((s) => calcAverage(s.grades));
-  return {
-    avg:       (avgs.reduce((a, b) => a + b, 0) / avgs.length).toFixed(1) + "%",
-    high:      Math.max(...avgs) + "%",
-    low:       Math.min(...avgs) + "%",
-    submitted: `${students.length}/${students.length}`,
+  useEffect(() => {
+    const load = async () => {
+      try {
+        setLoading(true);
+        setError('');
+        const [enrollmentRes, gradeRes] = await Promise.all([
+          enrollmentService.getAll({ limit: 400 }),
+          gradeService.getAll(),
+        ]);
+        const enrollmentData = Array.isArray(enrollmentRes?.data) ? enrollmentRes.data : [];
+        const gradeData = Array.isArray(gradeRes?.data) ? gradeRes.data : [];
+        const byEnrollment = {};
+        for (const g of gradeData) byEnrollment[g.enrollment_id] = g;
+        setEnrollments(enrollmentData);
+        setGradeMap(byEnrollment);
+      } catch (err) {
+        setError(err?.message || 'Failed to load grade management data.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, []);
+
+  const sectionOptions = useMemo(() => {
+    const map = new Map();
+    for (const e of enrollments) {
+      const s = e?.section;
+      if (!s?.section_id || map.has(s.section_id)) continue;
+      map.set(s.section_id, {
+        value: String(s.section_id),
+        label: `${s.course?.course_code || '-'} Sec ${s.section_number || '-'} (${s.semester?.semester_name || ''} ${s.semester?.semester_year || ''})`,
+      });
+    }
+    return Array.from(map.values());
+  }, [enrollments]);
+
+  const rows = useMemo(() => {
+    const filtered = sectionFilter
+      ? enrollments.filter((e) => String(e?.section?.section_id) === String(sectionFilter))
+      : enrollments;
+
+    return filtered.map((e) => {
+      const existing = gradeMap[e.enrollment_id];
+      const draft = drafts[e.enrollment_id] || {};
+      const numeric = draft.numeric_grade ?? existing?.numeric_grade ?? '';
+      const letter = draft.letter_grade ?? existing?.letter_grade ?? (numeric !== '' ? letterFromNumeric(numeric) : '');
+      return {
+        enrollment_id: e.enrollment_id,
+        student_name: `${e.student?.user?.first_name || ''} ${e.student?.user?.last_name || ''}`.trim(),
+        student_number: e.student?.student_number || '-',
+        course: `${e.section?.course?.course_code || '-'} - ${e.section?.course?.course_name || '-'}`,
+        section: e.section?.section_number || '-',
+        semester: e.section?.semester ? `${e.section.semester.semester_name} ${e.section.semester.semester_year}` : '-',
+        grade_id: existing?.grade_id || null,
+        semester_id: existing?.semester_id || e.section?.semester?.semester_id || null,
+        numeric_grade: numeric,
+        letter_grade: letter,
+      };
+    });
+  }, [enrollments, gradeMap, drafts, sectionFilter]);
+
+  const setDraftValue = (enrollmentId, patch) => {
+    setDrafts((prev) => ({ ...prev, [enrollmentId]: { ...(prev[enrollmentId] || {}), ...patch } }));
   };
-};
 
-/* ── Icons ────────────────────────────────────────────── */
-const IconTrending = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" /><polyline points="17 6 23 6 23 12" />
-  </svg>
-);
-const IconAward = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="8" r="6" /><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" />
-  </svg>
-);
-const IconAlert = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
-  </svg>
-);
-const IconCheck = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="20 6 9 17 4 12" />
-  </svg>
-);
-const IconSearch = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
-  </svg>
-);
-const IconDownload = () => (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" />
-  </svg>
-);
+  const handleSave = async (row) => {
+    setSaving(true);
+    setError('');
+    setMessage('');
+    try {
+      const payload = {
+        enrollment_id: Number(row.enrollment_id),
+        letter_grade: row.letter_grade || letterFromNumeric(row.numeric_grade),
+        numeric_grade: row.numeric_grade === '' ? null : Number(row.numeric_grade),
+        grade_points: null,
+        semester_id: row.semester_id || null,
+      };
 
-const GradeManagement = ({
-  courses = defaultCourses,
-  studentsByCourse = defaultStudents,
-}) => {
-  const [selectedCourseId, setSelectedCourseId] = useState(courses[0]?.id ?? null);
-  const [selectedSemester, setSelectedSemester] = useState(null);
-  const [search, setSearch] = useState("");
-  const [studentsData, setStudentsData] = useState(studentsByCourse);
+      let res;
+      if (row.grade_id) {
+        res = await gradeService.update(row.grade_id, payload);
+      } else {
+        res = await gradeService.create(payload);
+      }
 
-  const selectedCourse = courses.find((c) => c.id === selectedCourseId);
-  const filteredCourses = selectedSemester
-    ? courses.filter((c) => c.semester === selectedSemester)
-    : courses;
-  const rawStudents = studentsData[selectedCourseId] ?? [];
+      const saved = res?.data || {};
+      setGradeMap((prev) => ({ ...prev, [row.enrollment_id]: saved }));
+      setDrafts((prev) => {
+        const next = { ...prev };
+        delete next[row.enrollment_id];
+        return next;
+      });
+      setMessage('Grade saved successfully.');
+    } catch (err) {
+      setError(err?.message || 'Failed to save grade.');
+    } finally {
+      setSaving(false);
+    }
+  };
 
-  const filteredStudents = useMemo(() =>
-    rawStudents.filter((s) =>
-      s.name.toLowerCase().includes(search.toLowerCase()) ||
-      s.studentId.toLowerCase().includes(search.toLowerCase())
-    ), [rawStudents, search]);
-
-  const stats = computeStats(rawStudents);
-
-  const handleSave = (studentId, updatedGrades) => {
-    setStudentsData((prev) => ({
-      ...prev,
-      [selectedCourseId]: prev[selectedCourseId].map((s) =>
-        s.id === studentId ? { ...s, grades: updatedGrades } : s
+  const columns = [
+    { key: 'student_name', header: 'Student' },
+    { key: 'student_number', header: 'Student No.' },
+    { key: 'course', header: 'Course' },
+    { key: 'section', header: 'Section' },
+    {
+      key: 'numeric_grade',
+      header: 'Numeric',
+      render: (_, row) => (
+        <Input
+          type="number"
+          min="0"
+          max="100"
+          value={row.numeric_grade}
+          onChange={(e) => {
+            const numeric = e.target.value;
+            setDraftValue(row.enrollment_id, {
+              numeric_grade: numeric,
+              letter_grade: numeric === '' ? '' : letterFromNumeric(numeric),
+            });
+          }}
+          className="w-24"
+        />
       ),
-    }));
-  };
-
-  const handleExport = () => alert(`Exporting grades for ${selectedCourse?.code}...`);
+    },
+    {
+      key: 'letter_grade',
+      header: 'Letter',
+      render: (_, row) => (
+        <Select
+          value={row.letter_grade || ''}
+          onChange={(e) => setDraftValue(row.enrollment_id, { letter_grade: e.target.value })}
+          options={[
+            { value: 'A', label: 'A' },
+            { value: 'B', label: 'B' },
+            { value: 'C', label: 'C' },
+            { value: 'D', label: 'D' },
+            { value: 'F', label: 'F' },
+          ]}
+          className="w-24"
+        />
+      ),
+    },
+    {
+      key: 'action',
+      header: 'Action',
+      render: (_, row) => (
+        <Button size="sm" onClick={() => handleSave(row)} disabled={saving}>
+          Save
+        </Button>
+      ),
+    },
+  ];
 
   return (
     <FacultyLayout>
-      <div>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "24px" }}>
+      <div className="space-y-6">
+        <div className="flex items-start justify-between">
           <div>
-            <h1 style={{ fontSize: "20px", fontWeight: 500, color: "#111827" }}>Grade Management</h1>
-            <p style={{ margin: "4px 0 0", fontSize: "14px", color: "#6b7280" }}>
-              Manage and submit grades for your courses
-            </p>
+            <h1 className="text-2xl font-bold text-gray-900">Grade Management</h1>
+            <p className="mt-1 text-sm text-gray-600">Enter and update grades for students in your assigned sections.</p>
           </div>
-          <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-            <SemesterDropdown
-              value={selectedSemester}
-              onChange={(sem) => {
-                setSelectedSemester(sem);
-                const firstCourse = courses.find((c) => c.semester === sem);
-                setSelectedCourseId(firstCourse?.id ?? null);
-              }}
-            />
-            <button
-              onClick={handleExport}
-              style={{
-                display: "flex", alignItems: "center", gap: "6px",
-                padding: "8px 16px", backgroundColor: "#fff",
-                border: "1px solid #d1d5db", borderRadius: "8px",
-                fontSize: "14px", fontWeight: 500, color: "#374151",
-                cursor: "pointer", fontFamily: "'DM Sans', sans-serif",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f9fafb")}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#fff")}
-            >
-              <IconDownload /> Export
-            </button>
-            <button
-              style={{
-                display: "flex", alignItems: "center", gap: "6px",
-                padding: "8px 16px", backgroundColor: "#3b5bff",
-                border: "none", borderRadius: "8px",
-                fontSize: "14px", fontWeight: 600, color: "#fff",
-                cursor: "pointer", fontFamily: "'DM Sans', sans-serif",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#2a46e0")}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#3b5bff")}
-            >
-              <IconCheck /> Submit Grades
-            </button>
-          </div>
-        </div>
-
-        {/* ── Course Selector Tabs ── */}
-        <div
-          style={{
-            display: "flex", gap: "0",
-            backgroundColor: "#fff",
-            border: "1px solid #e5e7eb",
-            borderRadius: "12px",
-            overflow: "hidden",
-            marginBottom: "20px",
-          }}
-        >
-          {filteredCourses.map((course, idx) => {
-            const isActive = course.id === selectedCourseId;
-            return (
-              <button
-                key={course.id}
-                onClick={() => { setSelectedCourseId(course.id); setSearch(""); }}
-                style={{
-                  flex: 1,
-                  padding: "14px 16px",
-                  border: "none",
-                  borderRight: idx < filteredCourses.length - 1 ? "1px solid #e5e7eb" : "none",
-                  borderBottom: isActive ? "2px solid #3b5bff" : "2px solid transparent",
-                  backgroundColor: isActive ? "#f0f4ff" : "#fff",
-                  color: isActive ? "#3b5bff" : "#6b7280",
-                  fontWeight: isActive ? 700 : 400,
-                  fontSize: "14px",
-                  fontFamily: "'DM Sans', sans-serif",
-                  cursor: "pointer",
-                  textAlign: "center",
-                  transition: "background-color 0.15s, color 0.15s",
-                }}
-              >
-                <div style={{ fontWeight: isActive ? 700 : 600, fontSize: "14px" }}>{course.code}</div>
-                <div style={{ fontSize: "11.5px", marginTop: "2px", color: isActive ? "#6366f1" : "#9ca3af" }}>{course.name}</div>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* ── Stat Cards ── */}
-        <div style={{ display: "flex", gap: "14px", marginBottom: "20px" }}>
-          <GradeStatCard label="Class Average"  value={stats.avg}       icon={<TrendingUp />} color="#3b5bff" />
-          <GradeStatCard label="Highest Grade"  value={stats.high}      icon={<Award />}    color="#16a34a" />
-          <GradeStatCard label="Lowest Grade"   value={stats.low}       icon={<CircleAlert />}    color="#dc2626" />
-          <GradeStatCard label="Submissions"    value={stats.submitted} icon={<Check />}    color="#d97706" />
-        </div>
-
-        {/* ── Search + Table Header ── */}
-        <div
-          style={{
-            display: "flex", justifyContent: "space-between", alignItems: "center",
-            marginBottom: "12px",
-          }}
-        >
-          <div style={{ fontSize: "15px", fontWeight: 700, color: "#111827" }}>
-            {selectedCourse?.code} — {selectedCourse?.name}
-            <span style={{ fontSize: "12.5px", fontWeight: 400, color: "#9ca3af", marginLeft: "8px" }}>
-              {filteredStudents.length} student{filteredStudents.length !== 1 ? "s" : ""}
-            </span>
-          </div>
-
-          {/* Search */}
-          <div style={{ position: "relative" }}>
-            <div style={{ position: "absolute", left: "10px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }}>
-              <IconSearch />
-            </div>
-            <input
-              type="text"
-              placeholder="Search student..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              style={{
-                paddingLeft: "34px", paddingRight: "14px", paddingTop: "8px", paddingBottom: "8px",
-                border: "1px solid #d1d5db", borderRadius: "8px",
-                fontSize: "14px", fontFamily: "'DM Sans', sans-serif",
-                color: "#374151", outline: "none", width: "220px",
-                backgroundColor: "#f9fafb",
-              }}
-              onFocus={(e) => { e.currentTarget.style.borderColor = "#93c5fd"; e.currentTarget.style.backgroundColor = "#fff"; }}
-              onBlur={(e)  => { e.currentTarget.style.borderColor = "#d1d5db"; e.currentTarget.style.backgroundColor = "#f9fafb"; }}
+          <div className="w-96">
+            <Select
+              label="Section Filter"
+              value={sectionFilter}
+              onChange={(e) => setSectionFilter(e.target.value)}
+              options={sectionOptions}
+              placeholder="All sections"
             />
           </div>
         </div>
 
-        {/* ── Grade Table ── */}
-        <GradeTable students={filteredStudents} onSave={handleSave} />
+        {error && <Alert type="error" title="Grade Error" message={error} />}
+        {message && <Alert type="success" title="Success" message={message} />}
 
+        {loading ? (
+          <div className="flex h-48 items-center justify-center">
+            <Spinner size="lg" />
+          </div>
+        ) : (
+          <Card>
+            <Table columns={columns} data={rows} emptyMessage="No enrollments found for grading." />
+          </Card>
+        )}
       </div>
     </FacultyLayout>
   );
 };
 
 export default GradeManagement;
+

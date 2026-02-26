@@ -12,6 +12,7 @@ const StudentCreate = () => {
     first_name: '',
     last_name: '',
     email: '',
+    password: '',
     student_number: `STU${Date.now().toString().slice(-6)}`, // Auto-generated
     classification: 1,
     major_name: 'Computer Science',
@@ -32,12 +33,13 @@ const StudentCreate = () => {
       // Navigate back WITH SUCCESS MESSAGE
       navigate('/admin/students', { 
         state: { 
-          message: response.message || 'Student created successfully!' 
+          message: `${response.message || 'Student created successfully!'}` 
         } 
       })
     } catch (error) {
       console.error('Create error:', error)
-      alert('Error creating student: ' + (error.message || 'Unknown error'))
+      const message = error?.response?.data?.message || error.message || 'Unknown error'
+      alert('Error creating student: ' + message)
     } finally {
       setLoading(false)
     }
@@ -85,6 +87,16 @@ const StudentCreate = () => {
                   onChange={(e) => handleChange('email', e.target.value)}
                   required
                   placeholder="student@school.edu"
+                />
+
+                <Input
+                  label="Password *"
+                  type="password"
+                  value={formData.password}
+                  onChange={(e) => handleChange('password', e.target.value)}
+                  required
+                  placeholder="At least 8 characters"
+                  helperText="Set the student's login password."
                 />
               </div>
 

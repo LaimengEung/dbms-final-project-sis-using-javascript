@@ -1,4 +1,5 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import Sidebar from './Sidebar'
 import Header from './Header'
 
@@ -12,10 +13,25 @@ const facultyMenu = [
   { icon: <ClipboardList />, label: 'Student Requests', path: '/faculty/studentRequests' },
 ];
 
-const facultyUser = {
-  name: "Faculty User",
-  email: "faculty@school.edu",
-  initials: "F",
+const getFacultyUser = () => {
+  try {
+    const current = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    const firstName = String(current.first_name || '').trim();
+    const lastName = String(current.last_name || '').trim();
+    const name = [firstName, lastName].filter(Boolean).join(' ').trim() || 'Faculty User';
+    const initials = `${firstName.slice(0, 1)}${lastName.slice(0, 1)}`.toUpperCase() || 'F';
+    return {
+      name,
+      email: current.email || 'faculty@school.edu',
+      initials,
+    };
+  } catch {
+    return {
+      name: 'Faculty User',
+      email: 'faculty@school.edu',
+      initials: 'F',
+    };
+  }
 };
 
 const facultyNotifications = [
@@ -30,13 +46,21 @@ const facultyProfileLinks = [
 ];
 
 const FacultyLayout = ({ children, title = "Dashboard" }) => {
+  const navigate = useNavigate()
+  const facultyUser = getFacultyUser()
+  const handleLogout = () => {
+    localStorage.removeItem('currentUser')
+    localStorage.removeItem('accessToken')
+    navigate('/')
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Sidebar
         menuItems={facultyMenu}
         user={facultyUser}
         logo={{ icon: <Users />, label: "SchoolFaculty" }}
-        onLogout={() => console.log("logout")}
+        onLogout={handleLogout}
       />
       <div className="md:pl-64">
         <Header 
@@ -45,7 +69,7 @@ const FacultyLayout = ({ children, title = "Dashboard" }) => {
           notifications={facultyNotifications}
           profileLinks={facultyProfileLinks}
           searchPlaceholder="Search students, courses, faculty..."
-          onLogout={() => console.log("logout")} />
+          onLogout={handleLogout} />
         <main className="py-6 px-4 sm:px-6 lg:px-8">
           {children}
         </main>
